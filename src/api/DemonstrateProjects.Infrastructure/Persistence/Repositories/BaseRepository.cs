@@ -1,13 +1,17 @@
 using DemonstrateProjects.Core.Interfaces.Repositories;
+using Microsoft.EntityFrameworkCore;
 
 namespace DemonstrateProjects.Infrastructure.Persistence.Repositories;
 
 public class BaseRepository<TKey, TEntity> : IBaseRepository<TKey, TEntity> where TEntity : class
 {
     private readonly AppDbContext _context;
+    private readonly DbSet<TEntity> _dbSet;
+
     public BaseRepository(AppDbContext context)
     {
         _context = context;
+        _dbSet = context.Set<TEntity>();
     }
 
     public Task CreateAsync(TEntity entity)
