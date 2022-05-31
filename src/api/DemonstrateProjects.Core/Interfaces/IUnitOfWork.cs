@@ -5,7 +5,7 @@ namespace DemonstrateProjects.Core.Interfaces;
 public interface IUnitOfWork
 {
     IProjectRepository Projects { get; }
-    IPersonalReadKeyRepository PersonalReaKeys { get; }
+    IPersonalReadKeyRepository PersonalReadKeys { get; }
 
     Task SaveChangesAsync();
 }
