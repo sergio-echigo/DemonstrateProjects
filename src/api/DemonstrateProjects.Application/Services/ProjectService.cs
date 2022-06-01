@@ -1,6 +1,7 @@
 using DemonstrateProjects.Application.InputModels;
 using DemonstrateProjects.Application.Services.Interfaces;
 using DemonstrateProjects.Application.ViewModels;
+using DemonstrateProjects.Core.Entities;
 using DemonstrateProjects.Core.Interfaces;
 
 namespace DemonstrateProjects.Application.Services;
@@ -13,28 +14,73 @@ public class ProjectService : IProjectService
         _unitOfWork = unitOfWork;    
     }
 
-    public Task AddAsync(Guid UserId, NewProjectModel model)
+    public async Task AddAsync(Guid userId, NewProjectModel model)
     {
-        throw new NotImplementedException();
+        var lastE = await _unitOfWork.Projects.GetByUserIdAsync(userId);
+        Project entity = new()
+        {
+            UserId = userId,
+
+            // We're verifying if the last is default, so no worry about the nullability of lasE.LastOrDefault()            
+            Index = (lastE.LastOrDefault() == default) ? 0 : lastE.LastOrDefault()!.Index + 1,
+
+            Title = model.Title.Trim().Replace(" ", "_"),
+            Description = model.Description.Trim().Replace("  ", " ")
+        };
+
+        await _unitOfWork.Projects.Add(entity);
+        await _unitOfWork.SaveChangesAsync();
     }
 
-    public Task<IQueryable<ProjectModel>> GetFromUserAsync(Guid userId)
+    public async Task<IQueryable<ProjectModel>> GetFromUserAsync(Guid userId)
     {
-        throw new NotImplementedException();
+        return (await _unitOfWork.Projects.GetByUserIdAsync(userId))
+            .Select(x => new ProjectModel()
+            {
+                Index = x.Index,
+                Title = x.Title,
+                Description = x.Description
+            });
     }
 
-    public Task<ProjectModel?> GetAsync(Guid userId, int index)
+    public async Task<ProjectModel?> GetAsync(Guid userId, int index)
     {
-        throw new NotImplementedException();
+        var project = await _unitOfWork.Projects.GetByUserIdAndIndexAsync(userId, index);
+        
+        /* Not required, but only for removing some warnings! And I'm tired of writing "We're verifying..." */
+        if (project is null)
+            return null;
+
+        return new ProjectModel()
+        {
+            Index = project.Index,
+            Title = project.Title,
+            Description = project.Description
+        };
     }
 
-    public Task EditAsync(Guid userId, int index, EditProjectModel model)
+    public async Task EditAsync(Guid userId, int index, EditProjectModel model)
     {
-        throw new NotImplementedException();
+        var project = await _unitOfWork.Projects.GetByUserIdAndIndexAsync(userId, index);
+        
+        Project updated = new()
+        {
+            Id = project!.Id,
+            Index = project.Index,
+            UserId = project.UserId,
+            Title = model.Title.Trim().Replace(" ", "_"),
+            Description = model.Description.Trim().Replace("  ", " ")
+        };
+
+        await _unitOfWork.Projects.UpdateAsync(updated);
+        await _unitOfWork.SaveChangesAsync();
     }
 
-    public Task DeleteAsync(Guid userId, int index)
+    public async Task DeleteAsync(Guid userId, int index)
     {
-        throw new NotImplementedException();
+        var project = await _unitOfWork.Projects.GetByUserIdAndIndexAsync(userId, index);
+
+        await _unitOfWork.Projects.DeleteAsync(project!.Id);
+        await _unitOfWork.SaveChangesAsync();
     }
 }

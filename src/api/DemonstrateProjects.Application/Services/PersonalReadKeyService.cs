@@ -1,6 +1,7 @@
 using DemonstrateProjects.Application.InputModels;
 using DemonstrateProjects.Application.Services.Interfaces;
 using DemonstrateProjects.Application.ViewModels;
+using DemonstrateProjects.Core.Entities;
 using DemonstrateProjects.Core.Interfaces;
 
 namespace DemonstrateProjects.Application.Services;
@@ -13,23 +14,55 @@ public class PersonalReadKeyService : IPersonalReadKeyService
         _unitOfWork = unitOfWork;
     }
     
-    public Task<Guid> CreateAsync(Guid userId, NewPersonalReadKeyModel model)
+    public async Task<Guid> CreateAsync(Guid userId, NewPersonalReadKeyModel model)
     {
-        throw new NotImplementedException();
+        PersonalReadKey entity = new()
+        {
+            UserId = userId,
+            ExpiresWhen = model.ExpiresWhen
+        };
+
+        await _unitOfWork.PersonalReadKeys.Add(entity);
+        await _unitOfWork.SaveChangesAsync();
+
+        /* This value is automatically assigned as Guid.NewGuid()! See Entities! */
+        return entity.Key;
     }
 
-    public Task<IQueryable<PersonalReadKeyModel>> GetFromUserAsync(Guid userId)
+    public async Task<IQueryable<PersonalReadKeyModel>> GetFromUserAsync(Guid userId)
     {
-        throw new NotImplementedException();
+        return (await _unitOfWork.PersonalReadKeys.GetByUserIdAsync(userId))
+            .Select(x => new PersonalReadKeyModel()
+            {
+                Key = x.Key,
+                ExpiresWhen = x.ExpiresWhen
+            });
     }
 
-    public Task<PersonalReadKeyModel?> GetAsync(Guid key)
+    public async Task<PersonalReadKeyModel?> GetAsync(Guid key)
     {
-        throw new NotImplementedException();
+        var personalKey = await _unitOfWork.PersonalReadKeys.GetEntityAsync(key);
+        
+        /* Not required, but only for removing some warnings! And I'm tired of writing "We're verifying..." */
+        if (personalKey is null)
+            return null;
+        
+        return new PersonalReadKeyModel()
+        {
+            Key = personalKey.Key,
+            ExpiresWhen = personalKey.ExpiresWhen
+        };
     }
 
-    public Task DeleteAsync(Guid key)
+    public async Task DeleteAsync(Guid key)
     {
-        throw new NotImplementedException();
+        var personalKey = await _unitOfWork.PersonalReadKeys.GetEntityAsync(key);
+        
+        /* Not required, but only for removing some warnings! And I'm tired of writing "We're verifying..." */
+        if (personalKey is null)
+            return;
+        
+        await _unitOfWork.PersonalReadKeys.DeleteAsync(key);
+        await _unitOfWork.SaveChangesAsync();
     }
 }

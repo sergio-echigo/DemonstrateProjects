@@ -119,6 +119,8 @@ public class ProjectServiceTests
             Description = "More than a simple QA WebApp."
         };
 
+        _unitOfWorkStub.Setup(x => x.Projects.GetByUserIdAndIndexAsync(userId, index)).ReturnsAsync(_mainEntity);
+
         _unitOfWorkStub.Setup(x => x.Projects.UpdateAsync(It.IsAny<Project>())).Verifiable();
         _unitOfWorkStub.Setup(x => x.SaveChangesAsync()).Verifiable();
 
@@ -126,8 +128,8 @@ public class ProjectServiceTests
         await _sut.EditAsync(userId, index, model);
 
         // Assert
-        _unitOfWorkStub.Verify(x => x.Projects.UpdateAsync(It.IsAny<Project>()), Times.Once);
-        _unitOfWorkStub.Verify(x => x.SaveChangesAsync(), Times.Once);
+        _unitOfWorkStub.Verify(x => x.Projects.UpdateAsync(It.IsAny<Project>()), Times.Once());
+        _unitOfWorkStub.Verify(x => x.SaveChangesAsync(), Times.Once());
     }
 
     [Fact]

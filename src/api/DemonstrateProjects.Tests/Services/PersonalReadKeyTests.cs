@@ -93,7 +93,7 @@ public class PersonalReadKeyServiceTests
         var result = await _sut.GetAsync(key);
 
         // Assert
-        Assert.NotNull(result);
+        Assert.Null(result);
     }
 
     [Fact]
