@@ -1,5 +1,10 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
+  <ItemGroup>
+    <ProjectReference Include="..\DemonstrateProjects.Core\DemonstrateProjects.Core.csproj" />
+    <ProjectReference Include="..\DemonstrateProjects.Infrastructure\DemonstrateProjects.Infrastructure.csproj" />
+  </ItemGroup>
+
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
