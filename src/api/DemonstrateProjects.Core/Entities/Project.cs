@@ -5,7 +5,7 @@ namespace DemonstrateProjects.Core.Entities;
 public class Project
 {
     [Key]
-    public Guid Id { get; } = Guid.NewGuid();
+    public Guid Id { get; init; } = Guid.NewGuid();
 
     public Guid UserId { get; init; }
     public int Index { get; init; }
