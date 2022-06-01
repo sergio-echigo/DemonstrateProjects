@@ -14,19 +14,15 @@ public class BaseRepository<TKey, TEntity> : IBaseRepository<TKey, TEntity> wher
         _dbSet = context.Set<TEntity>();
     }
 
-    public Task CreateAsync(TEntity entity)
+    public async Task CreateAsync(TEntity entity)
     {
-        throw new NotImplementedException();
+        _dbSet.Add(entity);
+        await Task.CompletedTask;
     }
 
-    public Task<IQueryable<TEntity>> GetEntitiesAsync()
+    public async Task<IQueryable<TEntity>> GetEntitiesAsync()
     {
-        throw new NotImplementedException();
-    }
-
-    public Task<IQueryable<TEntity>> GetByUserIdAsync(Guid userId)
-    {
-        throw new NotImplementedException();
+        return await Task.FromResult(_dbSet.AsQueryable());
     }
 
     public Task<TEntity?> GetEntityAsync(TKey key)
