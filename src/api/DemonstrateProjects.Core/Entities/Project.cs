@@ -5,9 +5,11 @@ namespace DemonstrateProjects.Core.Entities;
 public class Project
 {
     [Key]
-    public int Id { get; init; }
+    public Guid Id { get; } = Guid.NewGuid();
 
     public Guid UserId { get; init; }
+    public int Index { get; init; }
+
 
     [StringLength(50)]
     public string Title { get; init; } = null!;

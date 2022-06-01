@@ -28,9 +28,9 @@ public class ProjectRepositoryTests
 
         _mainEntity = new Project()
         {
-            Id = 0,
             Title = "",
             Description = "",
+            Index = 0,
             UserId = Guid.NewGuid()
         };
     }
@@ -68,8 +68,7 @@ public class ProjectRepositoryTests
     public async Task GetByUserIdAsync_ShouldReturnEntitiesFromUser_WhenExecuted()
     {
         // Arrange
-        var listOf = new List<Project>() { _mainEntity }.AsQueryable();
-        _dbSetStub.Setup(x => x.AsQueryable()).Returns(listOf);
+        _dbSetStub.Setup(x => x.AsQueryable()).Returns(new List<Project>() { _mainEntity }.AsQueryable());
 
         // Act
         var result = await _sut.GetByUserIdAsync(_mainEntity.UserId);
@@ -78,6 +77,34 @@ public class ProjectRepositoryTests
         Assert.NotNull(result);
         Assert.IsAssignableFrom<IQueryable<Project>>(result);
         Assert.Contains(_mainEntity, result);
+    }
+
+    [Fact]
+    public async Task GetByUserIdAndIndex_ShouldReturnEntity_WhenEntityFound()
+    {
+        // Arrange
+        _dbSetStub.Setup(x => x.AsQueryable()).Returns(new List<Project>() { _mainEntity }.AsQueryable());
+
+        // Act
+        var result = await _sut.GetByUserIdAndIndexAsync(_mainEntity.UserId, _mainEntity.Index);
+
+        // Assert
+        Assert.NotNull(result);
+        Assert.IsType<Project>(result);
+        Assert.Equal(_mainEntity, result);
+    }
+
+    [Fact]
+    public async Task GetByUserIdAndIndex_ShouldReturnNull_WhenEntityNotFound()
+    {
+        // Arrange
+        _dbSetStub.Setup(x => x.AsQueryable()).Returns(new List<Project>().AsQueryable());
+
+        // Act
+        var result = await _sut.GetByUserIdAndIndexAsync(_mainEntity.UserId, _mainEntity.Index);
+
+        // Assert
+        Assert.Null(result);
     }
 
     [Fact]
