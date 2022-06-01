@@ -11,8 +11,8 @@ public class UnitOfWork : IUnitOfWork
     private readonly IProjectRepository _projects;
     private readonly IPersonalReadKeyRepository _personalReadKeys;
 
-    public IProjectRepository Projects => throw new NotImplementedException();
-    public IPersonalReadKeyRepository PersonalReadKeys => throw new NotImplementedException();
+    public IProjectRepository Projects => _projects;
+    public IPersonalReadKeyRepository PersonalReadKeys => _personalReadKeys;
 
     public UnitOfWork(AppDbContext context)
     {
@@ -24,6 +24,6 @@ public class UnitOfWork : IUnitOfWork
 
     public async Task SaveChangesAsync()
     {
-        throw new NotImplementedException();
+        await _context.SaveChangesAsync();
     }
 }

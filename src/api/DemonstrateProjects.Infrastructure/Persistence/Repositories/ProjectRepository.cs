@@ -15,8 +15,6 @@ public class ProjectRepository : BaseRepository<int, Project>, IProjectRepositor
         _dbSet = context.Set<Project>();
     }
 
-    public async Task<IQueryable<Project>> GetByUserIdAsync(Guid userId)
-    {
-        throw new NotImplementedException();
-    }
+    public async Task<IQueryable<Project>> GetByUserIdAsync(Guid userId) =>
+        await Task.FromResult(_dbSet.AsQueryable().Where(x => x.UserId == userId));
 }

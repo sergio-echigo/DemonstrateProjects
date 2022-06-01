@@ -15,8 +15,6 @@ public class PersonalReadKeyRepository : BaseRepository<Guid, PersonalReadKey>, 
         _dbSet = context.Set<PersonalReadKey>();
     }
 
-    public async Task<IQueryable<PersonalReadKey>> GetByUserIdAsync(Guid userId)
-    {
-        throw new NotImplementedException();
-    }
+    public async Task<IQueryable<PersonalReadKey>> GetByUserIdAsync(Guid userId) =>
+        await Task.FromResult(_dbSet.AsQueryable().Where(x => x.UserId == userId));
 }

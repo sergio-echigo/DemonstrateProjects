@@ -14,7 +14,7 @@ public class BaseRepository<TKey, TEntity> : IBaseRepository<TKey, TEntity> wher
         _dbSet = context.Set<TEntity>();
     }
 
-    public async Task CreateAsync(TEntity entity)
+    public async Task Add(TEntity entity)
     {
         _dbSet.Add(entity);
         await Task.CompletedTask;
@@ -25,18 +25,22 @@ public class BaseRepository<TKey, TEntity> : IBaseRepository<TKey, TEntity> wher
         return await Task.FromResult(_dbSet.AsQueryable());
     }
 
-    public Task<TEntity?> GetEntityAsync(TKey key)
+    public async Task<TEntity?> GetEntityAsync(TKey key)
     {
-        throw new NotImplementedException();
+        return await _dbSet.FindAsync(key);
     }
 
-    public Task UpdateAsync(TKey key, TEntity updatedEntity)
+    public async Task UpdateAsync(TEntity updatedEntity)
     {
-        throw new NotImplementedException();
+        _dbSet.Update(updatedEntity);
+        await Task.CompletedTask;
     }
 
-    public Task DeleteAsync(TKey key)
+    public async Task DeleteAsync(TKey key)
     {
-        throw new NotImplementedException();
+        var toDelete = await _dbSet.FindAsync(key);
+
+        /* We're going to verify if entity exists on controllers! */
+        _dbSet.Remove(toDelete!);
     }
 }

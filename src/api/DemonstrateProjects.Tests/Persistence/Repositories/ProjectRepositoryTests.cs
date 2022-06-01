@@ -11,7 +11,7 @@ namespace DemonstrateProjects.Tests.Persistence.Repositories;
 public class ProjectRepositoryTests
 {
     private readonly Mock<AppDbContext> _contextStub;
-    private readonly Mock<IUnitOfWork> _unitOfWorkStub;
+    private readonly Mock<DbSet<Project>> _dbSetStub;
 
     private readonly ProjectRepository _sut;
 
@@ -20,9 +20,9 @@ public class ProjectRepositoryTests
     public ProjectRepositoryTests()
     {
         _contextStub = new(new DbContextOptions<AppDbContext>());
-        _unitOfWorkStub = new();
+        _dbSetStub = new();
 
-        // _contextStub.Setup(x => x.Set<Project>()).Returns(_contextStub.Object.Projects);
+        _contextStub.Setup(x => x.Set<Project>()).Returns(_dbSetStub.Object);
 
         _sut = new(_contextStub.Object);
 
@@ -36,23 +36,23 @@ public class ProjectRepositoryTests
     }
 
     [Fact]
-    public async Task CreateAsync_ShouldAddToDatabase_WhenExecuted()
+    public async Task Add_ShouldAddToDatabase_WhenExecuted()
     {
         // Arrange
-        _unitOfWorkStub.Setup(x => x.Projects.CreateAsync(_mainEntity)).Verifiable();
+        _dbSetStub.Setup(x => x.Add(_mainEntity)).Verifiable();
 
         // Act
-        await _sut.CreateAsync(_mainEntity);
+        await _sut.Add(_mainEntity);
 
         // Assert
-        _unitOfWorkStub.Verify(x => x.Projects.CreateAsync(_mainEntity), Times.Once);
+        _dbSetStub.Verify(x => x.Add(_mainEntity), Times.Once);
     }
 
     [Fact]
     public async Task GetEntitiesAsync_ShouldReturnAllEntities_WhenExecuted()
     {
         // Arrange
-        _unitOfWorkStub.Setup(x => x.Projects.GetEntitiesAsync()).ReturnsAsync(new List<Project>() { _mainEntity }.AsQueryable());
+        _dbSetStub.Setup(x => x.AsQueryable()).Returns(new List<Project>() { _mainEntity }.AsQueryable());
 
         // Act
         var result = await _sut.GetEntitiesAsync();
@@ -68,7 +68,8 @@ public class ProjectRepositoryTests
     public async Task GetByUserIdAsync_ShouldReturnEntitiesFromUser_WhenExecuted()
     {
         // Arrange
-        _unitOfWorkStub.Setup(x => x.Projects.GetByUserIdAsync(_mainEntity.UserId)).ReturnsAsync(new List<Project>() { _mainEntity }.AsQueryable());
+        var listOf = new List<Project>() { _mainEntity }.AsQueryable();
+        _dbSetStub.Setup(x => x.AsQueryable()).Returns(listOf);
 
         // Act
         var result = await _sut.GetByUserIdAsync(_mainEntity.UserId);
@@ -83,7 +84,7 @@ public class ProjectRepositoryTests
     public async Task GetEntityAsync_ShouldReturnEntity_WhenEntityFoundByKey()
     {
         // Arrange
-        _unitOfWorkStub.Setup(x => x.Projects.GetEntityAsync(_mainEntity.Id)).ReturnsAsync(_mainEntity);
+        _dbSetStub.Setup(x => x.FindAsync(_mainEntity.Id)).ReturnsAsync(_mainEntity);
 
         // Act
         var result = await _sut.GetEntityAsync(_mainEntity.Id);
@@ -97,7 +98,7 @@ public class ProjectRepositoryTests
     public async Task GetEntityAsync_ShouldReturnNull_WhenEntityNotFoundByKey()
     {
         // Arrange
-        _unitOfWorkStub.Setup(x => x.Projects.GetEntityAsync(_mainEntity.Id)).ReturnsAsync((Project?)null);
+        _dbSetStub.Setup(x => x.FindAsync(_mainEntity.Id)).ReturnsAsync((Project?)null);
 
         // Act
         var result = await _sut.GetEntityAsync(_mainEntity.Id);
@@ -110,27 +111,27 @@ public class ProjectRepositoryTests
     public async Task UpdateAsync_ShouldUpdate_WhenExecuted()
     {
         // Arrange
-        _unitOfWorkStub.Setup(x => x.Projects.GetEntityAsync(_mainEntity.Id)).ReturnsAsync(_mainEntity);
-        _unitOfWorkStub.Setup(x => x.Projects.UpdateAsync(_mainEntity.Id, _mainEntity)).Verifiable();
+        _dbSetStub.Setup(x => x.FindAsync(_mainEntity.Id)).ReturnsAsync(_mainEntity);
+        _dbSetStub.Setup(x => x.Update(_mainEntity)).Verifiable();
 
         // Act
-        await _sut.UpdateAsync(_mainEntity.Id, _mainEntity);
+        await _sut.UpdateAsync(_mainEntity);
 
         // Assert
-        _unitOfWorkStub.Verify(x => x.Projects.UpdateAsync(_mainEntity.Id, _mainEntity), Times.Once);
+        _dbSetStub.Verify(x => x.Update(_mainEntity), Times.Once);
     }
 
     [Fact]
     public async Task DeleteAsync_ShouldDelete_WhenExecuted()
     {
         // Arrange
-        _unitOfWorkStub.Setup(x => x.Projects.GetEntityAsync(_mainEntity.Id)).ReturnsAsync(_mainEntity);
-        _unitOfWorkStub.Setup(x => x.Projects.DeleteAsync(_mainEntity.Id)).Verifiable();
+        _dbSetStub.Setup(x => x.FindAsync(_mainEntity.Id)).ReturnsAsync(_mainEntity);
+        _dbSetStub.Setup(x => x.Remove(_mainEntity)).Verifiable();
 
         // Act
         await _sut.DeleteAsync(_mainEntity.Id);
 
         // Assert
-        _unitOfWorkStub.Verify(x => x.Projects.DeleteAsync(_mainEntity.Id), Times.Once);
+        _dbSetStub.Verify(x => x.Remove(_mainEntity), Times.Once);
     }
 }
