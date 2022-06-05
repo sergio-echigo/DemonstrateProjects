@@ -5,7 +5,7 @@ namespace DemonstrateProjects.Application.Services.Interfaces;
 
 public interface IProjectService
 {
-    Task AddAsync(Guid UserId, NewProjectModel model);
+    Task<ProjectModel> AddAsync(Guid UserId, NewProjectModel model);
 
     Task<IQueryable<ProjectModel>> GetFromUserAsync(Guid userId);
     Task<ProjectModel?> GetAsync(Guid userId, int index);

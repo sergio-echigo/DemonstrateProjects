@@ -14,7 +14,7 @@ public class ProjectService : IProjectService
         _unitOfWork = unitOfWork;    
     }
 
-    public async Task AddAsync(Guid userId, NewProjectModel model)
+    public async Task<ProjectModel> AddAsync(Guid userId, NewProjectModel model)
     {
         var lastE = await _unitOfWork.Projects.GetByUserIdAsync(userId);
         Project entity = new()
@@ -30,6 +30,13 @@ public class ProjectService : IProjectService
 
         await _unitOfWork.Projects.Add(entity);
         await _unitOfWork.SaveChangesAsync();
+
+        return new ProjectModel()
+        {
+            Index = entity.Index,
+            Title = entity.Title,
+            Description = entity.Description
+        };
     }
 
     public async Task<IQueryable<ProjectModel>> GetFromUserAsync(Guid userId)
