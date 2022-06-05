@@ -38,21 +38,30 @@ public class AuthService : IAuthService
 
     public string? GetUsernameInToken(string token)
     {
-        var parameters = new TokenValidationParameters()
+        try
         {
-            ValidateAudience = true,
-            ValidateIssuer = true,
-            ValidateIssuerSigningKey = true,
-            ValidateLifetime = false,
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config.GetSection("JwtConfig:SecretSecureToken").Value))
-        };
+            var parameters = new TokenValidationParameters()
+            {
+                ValidateAudience = true,
+                ValidateIssuer = true,
+                ValidateIssuerSigningKey = true,
+                ValidateLifetime = false,
+                ValidAudience = _config.GetSection("JwtConfig:Audience").Value,
+                ValidIssuer = _config.GetSection("JwtConfig:Issuer").Value,
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config.GetSection("JwtConfig:SecretSecureToken").Value))
+            };
 
-        var tokenHandler = new JwtSecurityTokenHandler();
-        var principal = tokenHandler.ValidateToken(token, parameters, out var securityToken);
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var principal = tokenHandler.ValidateToken(token, parameters, out var securityToken);
 
-        if (securityToken is not JwtSecurityToken jwtSecurityToken || !jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256, StringComparison.InvariantCultureIgnoreCase))
-            throw new SecurityTokenException("Invalid Token!");
+            if (securityToken is not JwtSecurityToken jwtSecurityToken || !jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256, StringComparison.InvariantCultureIgnoreCase))
+                throw new SecurityTokenException("Invalid Token!");
 
-        return principal.Claims.FirstOrDefault(x => x.Type == "username")?.Value;
+            return principal.Claims.FirstOrDefault(x => x.Type == "username")?.Value;
+        }
+        catch
+        {
+            return null;
+        }
     }
 }

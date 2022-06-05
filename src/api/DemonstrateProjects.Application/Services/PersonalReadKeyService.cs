@@ -35,6 +35,7 @@ public class PersonalReadKeyService : IPersonalReadKeyService
             .Select(x => new PersonalReadKeyModel()
             {
                 Key = x.Key,
+                UserId = x.UserId,
                 ExpiresWhen = x.ExpiresWhen
             });
     }

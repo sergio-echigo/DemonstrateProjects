@@ -44,9 +44,14 @@ public class ProjectServiceTests
         _unitOfWorkStub.Setup(x => x.SaveChangesAsync()).Verifiable();
 
         // Act
-        await _sut.AddAsync(userId, model);
+        var result = await _sut.AddAsync(userId, model);
 
         // Assert
+        Assert.NotNull(result);
+        Assert.IsType<ProjectModel>(result);
+
+        Assert.Equal(model.Title.Trim().Replace("  ", " ").Replace(" ", "_"), result.Title);
+
         _unitOfWorkStub.Verify(x => x.Projects.Add(It.IsAny<Project>()), Times.Once);
         _unitOfWorkStub.Verify(x => x.SaveChangesAsync(), Times.Once);
     }
