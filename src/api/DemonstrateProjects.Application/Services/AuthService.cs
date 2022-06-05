@@ -1,5 +1,6 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 using DemonstrateProjects.Application.Services.Interfaces;
 using Microsoft.Extensions.Configuration;
@@ -63,5 +64,40 @@ public class AuthService : IAuthService
         {
             return null;
         }
+    }
+
+    public string GeneratePasswordHash(string pswd)
+    {
+        byte[] salt;
+        byte[] hash;
+
+        byte[] hashBytes = new byte[36];
+
+        salt = RandomNumberGenerator.GetBytes(16);
+        hash = new Rfc2898DeriveBytes(pswd, salt, 50000).GetBytes(20);
+
+        Array.Copy(salt, 0, hashBytes, 0, 16);
+        Array.Copy(hash, 0, hashBytes, 16, 20);
+
+        return Convert.ToBase64String(hashBytes);
+    }
+
+    public bool PasswordHashAreEqual(string pswd, string pswdHash)
+    {
+        byte[] salt = new byte[16];
+        byte[] hash;
+
+        byte[] hashBytes = Convert.FromBase64String(pswdHash);
+
+        Array.Copy(hashBytes, 0, salt, 0, 16);
+        hash = new Rfc2898DeriveBytes(pswd, salt, 50000).GetBytes(20);
+
+        for(int i = 0; i < 20; i++)
+        {
+            if (hashBytes[i+16] != hash[i])
+                return false;
+        }
+
+        return true;
     }
 }

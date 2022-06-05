@@ -65,4 +65,45 @@ public class AuthServiceTests
         // Assert
         Assert.Null(result);
     }
+
+    [Fact]
+    public void GeneratePasswordHash_ShouldGeneratePassWordHash_WhenExecuted()
+    {
+        // Arrange
+        var pswd = "!StrongP4ssword!";
+
+        // Act
+        var result = _sut.GeneratePasswordHash(pswd);
+
+        // Assert
+        Assert.NotNull(pswd);
+    }
+
+    [Fact]
+    public void PasswordHashAreEqual_ShouldReturnTrue_WhenPasswordsAreEqual()
+    {
+        // Arrange
+        var pswd = "!StrongP4ssword!";
+
+        // Act
+        var pswdHash = _sut.GeneratePasswordHash(pswd);
+        var result = _sut.PasswordHashAreEqual(pswd, pswdHash);
+
+        // Assert
+        Assert.True(result);
+    }
+
+    [Fact]
+    public void PasswordHashAreEqual_ShouldReturnFalse_WhenPasswordsAreNotEqual()
+    {
+        // Arrange
+        var pswd = "!StrongP4ssword!";
+
+        // Act
+        var pswdHash = _sut.GeneratePasswordHash("Another Password!");
+        var result = _sut.PasswordHashAreEqual(pswd, pswdHash);
+
+        // Assert
+        Assert.False(result);
+    }
 }
