@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DemonstrateProjects.Infrastructure.Persistence;
 
-public class AppDbContext : IdentityDbContext<IdentityUser<Guid>, IdentityRole<Guid>, Guid>
+public class AppDbContext : IdentityDbContext<AppUser, AppRole, Guid>
 {
     public AppDbContext(DbContextOptions<AppDbContext> opt) : base(opt)
     {

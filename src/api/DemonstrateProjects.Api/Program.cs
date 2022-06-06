@@ -3,8 +3,6 @@ using DemonstrateProjects.Core.Interfaces.Repositories;
 using DemonstrateProjects.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using DemonstrateProjects.Infrastructure.Persistence.Repositories;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.DependencyInjection;
 using DemonstrateProjects.Application.Services;
 using DemonstrateProjects.Application.Services.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -15,17 +13,17 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddTransient<IProjectRepository, ProjectRepository>();
-builder.Services.AddTransient<IPersonalReadKeyRepository, PersonalReadKeyRepository>();
+builder.Services.AddScoped<IProjectRepository, ProjectRepository>();
+builder.Services.AddScoped<IPersonalReadKeyRepository, PersonalReadKeyRepository>();
 
-builder.Services.AddTransient<IUnitOfWork, UnitOfWork>();
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
-builder.Services.AddDbContext<AppDbContext>(opt => opt.UseInMemoryDatabase("database")).AddEntityFrameworkStores<AppDbContext>().AddDefaultTokenProviders();
-builder.Services.AddIdentity<IdentityUser<Guid>, IdentityRole<Guid>>();
+builder.Services.AddDbContext<AppDbContext>(opt => opt.UseInMemoryDatabase("database"));
+builder.Services.AddIdentity<AppUser, AppRole>().AddEntityFrameworkStores<AppDbContext>();
 
-builder.Services.AddTransient<IProjectService, ProjectService>();
-builder.Services.AddTransient<IPersonalReadKeyService, PersonalReadKeyService>();
-builder.Services.AddTransient<IAuthService, AuthService>();
+builder.Services.AddScoped<IProjectService, ProjectService>();
+builder.Services.AddScoped<IPersonalReadKeyService, PersonalReadKeyService>();
+builder.Services.AddScoped<IAuthService, AuthService>();
 
 builder.Services.AddAuthentication(x => {
     x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -42,7 +40,7 @@ builder.Services.AddAuthentication(x => {
     };
 });
 
-builder.Services.AddControllers();
+builder.Services.AddControllers(opt => opt.SuppressAsyncSuffixInActionNames = false);
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

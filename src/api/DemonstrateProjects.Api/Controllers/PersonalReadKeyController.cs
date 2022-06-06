@@ -1,5 +1,6 @@
 using DemonstrateProjects.Application.InputModels;
 using DemonstrateProjects.Application.Services.Interfaces;
+using DemonstrateProjects.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -11,12 +12,12 @@ namespace DemonstrateProjects.Api.Controllers;
 [Route("/keys")]
 public class PersonalReadKeyController : ControllerBase
 {
-    private readonly UserManager<IdentityUser<Guid>> _userManager;
+    private readonly UserManager<AppUser> _userManager;
 
     private readonly IAuthService _authService;
     private readonly IPersonalReadKeyService _personalReadKeyService;
 
-    public PersonalReadKeyController(UserManager<IdentityUser<Guid>> userManager, IAuthService authService, IPersonalReadKeyService personalReadKeyService)
+    public PersonalReadKeyController(UserManager<AppUser> userManager, IAuthService authService, IPersonalReadKeyService personalReadKeyService)
     {
         _userManager = userManager;
 

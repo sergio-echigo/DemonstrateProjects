@@ -1,5 +1,6 @@
 using DemonstrateProjects.Application.InputModels;
 using DemonstrateProjects.Application.Services.Interfaces;
+using DemonstrateProjects.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -11,13 +12,13 @@ namespace DemonstrateProjects.Api.Controllers;
 [Route("/projects")]
 public class ProjectController : ControllerBase
 {
-    private readonly UserManager<IdentityUser<Guid>> _userManager;
+    private readonly UserManager<AppUser> _userManager;
     private readonly IAuthService _authService;
 
     private readonly IProjectService _projectService;
     private readonly IPersonalReadKeyService _personalReadKeyService;
 
-    public ProjectController(UserManager<IdentityUser<Guid>> userManager, 
+    public ProjectController(UserManager<AppUser> userManager, 
                              IAuthService authService, 
                              IProjectService projectService, 
                              IPersonalReadKeyService personalReadKeyService)

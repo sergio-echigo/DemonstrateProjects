@@ -1,6 +1,7 @@
 using System.IdentityModel.Tokens.Jwt;
 using DemonstrateProjects.Application.InputModels;
 using DemonstrateProjects.Application.Services.Interfaces;
+using DemonstrateProjects.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -12,12 +13,12 @@ namespace DemonstrateProjects.Api.Controllers;
 [AllowAnonymous]
 public class AuthController : ControllerBase
 {
-    private readonly UserManager<IdentityUser<Guid>> _userManager;
+    private readonly UserManager<AppUser> _userManager;
     private readonly IAuthService _authService;
 
-    public AuthController(UserManager<IdentityUser<Guid>> usermanager, IAuthService authService)
+    public AuthController(UserManager<AppUser> userManager, IAuthService authService)
     {
-        _userManager = usermanager;
+        _userManager = userManager;
         _authService = authService;
     }
 
@@ -30,7 +31,7 @@ public class AuthController : ControllerBase
         if (!(existentByName is null && existentByEmail is null))
             return BadRequest();
         
-        var newUser = new IdentityUser<Guid>()
+        var newUser = new AppUser()
         {
             Id = Guid.NewGuid(),
             UserName = model.Username,
@@ -38,7 +39,7 @@ public class AuthController : ControllerBase
             PasswordHash = _authService.GeneratePasswordHash(model.Password)
         };
 
-        return CreatedAtAction(nameof(RegisterAsync) + "Async", model);
+        return CreatedAtAction(nameof(RegisterAsync), model);
     }
 
     [HttpPost("login")]
