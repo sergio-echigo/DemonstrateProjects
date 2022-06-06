@@ -11,20 +11,23 @@ using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-
+/* Core and Infrastructure Layers */
 builder.Services.AddScoped<IProjectRepository, ProjectRepository>();
 builder.Services.AddScoped<IPersonalReadKeyRepository, PersonalReadKeyRepository>();
 
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
+// builder.Services.AddDbContext<AppDbContext>(opt => opt.UseNpgsql("Our ConnectionString!!"));
+
 builder.Services.AddDbContext<AppDbContext>(opt => opt.UseInMemoryDatabase("database"));
 builder.Services.AddIdentity<AppUser, AppRole>().AddEntityFrameworkStores<AppDbContext>();
 
+/* Application Layer */
 builder.Services.AddScoped<IProjectService, ProjectService>();
 builder.Services.AddScoped<IPersonalReadKeyService, PersonalReadKeyService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 
+/* Authentication */
 builder.Services.AddAuthentication(x => {
     x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
     x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -42,18 +45,7 @@ builder.Services.AddAuthentication(x => {
 
 builder.Services.AddControllers(opt => opt.SuppressAsyncSuffixInActionNames = false);
 
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-
 var app = builder.Build();
-
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
 
 app.UseHttpsRedirection();
 

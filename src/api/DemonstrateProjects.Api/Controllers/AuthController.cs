@@ -39,7 +39,11 @@ public class AuthController : ControllerBase
             PasswordHash = _authService.GeneratePasswordHash(model.Password)
         };
 
-        return CreatedAtAction(nameof(RegisterAsync), model);
+        var success = (await _userManager.CreateAsync(newUser)).Succeeded;
+        if (success)
+            return CreatedAtAction(nameof(RegisterAsync), model);
+    
+        return BadRequest();
     }
 
     [HttpPost("login")]
@@ -59,19 +63,18 @@ public class AuthController : ControllerBase
                 SetAuthCookies(_authService.GenerateToken(existentByName.UserName, false), _authService.GenerateToken(existentByName.UserName, true));
                 return Ok();
             }
-            else
-                return BadRequest();
         }
-        else
+        
+        if (existentByEmail is not null)
         {
             if (_authService.PasswordHashAreEqual(model.Password, existentByEmail.PasswordHash))
             {
                 SetAuthCookies(_authService.GenerateToken(existentByEmail.UserName, false), _authService.GenerateToken(existentByEmail.UserName, true));
                 return Ok();
             }
-            else
-                return BadRequest();
         }
+
+        return BadRequest();
     }
 
     [HttpPost("refresh")]
