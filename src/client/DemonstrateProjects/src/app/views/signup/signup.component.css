@@ -1,0 +1,27 @@
+.section-form {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+
+    height: 85%;
+}
+
+.signup-form {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+
+    width: 40%;
+    height: 65%;
+
+    padding: 50px;
+    text-align: center;
+
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+}
+
+.signup-form__field {
+    width: 80%;
+}

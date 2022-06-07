@@ -1,0 +1,19 @@
+<section class="section-form">
+    <form [formGroup]="formGroup" *ngIf="formGroup" class="signin-form">
+        <header>
+            <h1 style="font-family: 'Times New Roman', Times, serif; font-size: 30px;">Sign In</h1>
+        </header>
+    
+        <mat-form-field class="signin-form__field">
+            <mat-label>Username or Email</mat-label>
+            <input type="text" matInput formControlName="main">
+        </mat-form-field>
+    
+        <mat-form-field class="signin-form__field">
+            <mat-label>Password</mat-label>
+            <input type="password" matInput formControlName="password">
+        </mat-form-field>
+    
+        <button mat-raised-button color="basic" style="margin-top: 20px;">Sign In!</button>
+    </form>
+</section>
