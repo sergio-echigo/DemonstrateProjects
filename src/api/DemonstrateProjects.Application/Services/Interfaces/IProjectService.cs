@@ -10,6 +10,8 @@ public interface IProjectService
     Task<IQueryable<ProjectModel>> GetFromUserAsync(Guid userId);
     Task<ProjectModel?> GetAsync(Guid userId, int index);
 
+    Task UploadImgAsync(Guid userId, int index, byte[] img);
+
     Task EditAsync(Guid userId, int index, EditProjectModel model);
     Task DeleteAsync(Guid userId, int index);
 }

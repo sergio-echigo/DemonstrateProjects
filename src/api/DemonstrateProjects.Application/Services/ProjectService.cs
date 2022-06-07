@@ -25,7 +25,8 @@ public class ProjectService : IProjectService
             Index = (lastE.LastOrDefault() == default) ? 0 : lastE.LastOrDefault()!.Index + 1,
 
             Title = model.Title.Trim().Replace(" ", "_"),
-            Description = model.Description.Trim().Replace("  ", " ")
+            Description = model.Description.Trim().Replace("  ", " "),
+            Img = new byte[1]
         };
 
         await _unitOfWork.Projects.Add(entity);
@@ -35,7 +36,8 @@ public class ProjectService : IProjectService
         {
             Index = entity.Index,
             Title = entity.Title,
-            Description = entity.Description
+            Description = entity.Description,
+            Base64Img = string.Empty
         };
     }
 
@@ -46,7 +48,8 @@ public class ProjectService : IProjectService
             {
                 Index = x.Index,
                 Title = x.Title,
-                Description = x.Description
+                Description = x.Description,
+                Base64Img = Convert.ToBase64String(x.Img)
             });
     }
 
@@ -62,8 +65,27 @@ public class ProjectService : IProjectService
         {
             Index = project.Index,
             Title = project.Title,
-            Description = project.Description
+            Description = project.Description,
+            Base64Img = Convert.ToBase64String(project.Img)
         };
+    }
+
+    public async Task UploadImgAsync(Guid userId, int index, byte[] img)
+    {
+        var project = await _unitOfWork.Projects.GetByUserIdAndIndexAsync(userId, index);
+        
+        Project updated = new()
+        {
+            Id = project!.Id,
+            Index = project.Index,
+            UserId = project.UserId,
+            Title = project.Title,
+            Description = project.Description,
+            Img = img
+        };
+    
+        await _unitOfWork.Projects.UpdateAsync(updated);
+        await _unitOfWork.SaveChangesAsync();
     }
 
     public async Task EditAsync(Guid userId, int index, EditProjectModel model)

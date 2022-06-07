@@ -6,4 +6,6 @@ public class ProjectModel
 
     public string Title { get; set; } = null!;
     public string Description { get; set; } = null!;
+
+    public string Base64Img { get; set; } = null!;
 }

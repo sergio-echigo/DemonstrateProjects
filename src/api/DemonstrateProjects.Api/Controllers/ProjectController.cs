@@ -80,6 +80,48 @@ public class ProjectController : ControllerBase
                 return NotFound();
     }
 
+    [HttpPost("{index}/img")]
+    public async Task<IActionResult> UploadImgAsync([FromRoute] int index, IFormFile file)
+    {
+        var allowedExt = new string[] 
+        {
+            ".gif", ".png", ".jpeg", ".jpg"
+        };
+        
+        for(int a = 0, b = 0; a < allowedExt.Length; a++)
+        {
+            if (!file.FileName.EndsWith(allowedExt[a]))
+                b++;
+            
+            if (b == allowedExt.Length)
+                return BadRequest();
+        }
+
+        var userId = await GetUserIdAsyncByTokensAsync();
+        if (userId == Guid.Empty)
+            return Forbid();
+
+        if (!(await _projectService.GetFromUserAsync(userId)).Any(x => x.Index == index))
+            return NotFound();
+
+        using (var memoryStream = new MemoryStream())
+        {
+            await file.CopyToAsync(memoryStream);
+            
+            if (memoryStream.Length < 10000000)
+            {
+                byte[] img = memoryStream.ToArray();
+                await _projectService.UploadImgAsync(userId, index, img);
+            }
+            else
+            {
+                return BadRequest();
+            }
+        }
+
+        return Ok();
+    }
+
     [HttpPut("{index}/edit")]
     public async Task<IActionResult> EditAsync([FromRoute] int index, [FromBody] EditProjectModel model)
     {

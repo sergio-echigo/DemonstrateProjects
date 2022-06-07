@@ -25,7 +25,8 @@ public class ProjectServiceTests
             Title = "BubbleSpace",
             Description = "QA WebApp.",
             Index = 0,
-            UserId = Guid.NewGuid()
+            UserId = Guid.NewGuid(),
+            Img = new byte[8]
         };
     }
 
@@ -109,6 +110,28 @@ public class ProjectServiceTests
 
         // Assert
         Assert.Null(result);
+    }
+
+    [Fact]
+    public async Task UploadImg_ShouldUpdate_WhenExecuted()
+    {
+        // Arrange
+        var userId = _mainEntity.UserId;
+        var index = _mainEntity.Index;
+
+        var img = new byte[100];
+
+        _unitOfWorkStub.Setup(x => x.Projects.GetByUserIdAndIndexAsync(userId, index)).ReturnsAsync(_mainEntity);
+
+        _unitOfWorkStub.Setup(x => x.Projects.UpdateAsync(It.IsAny<Project>())).Verifiable();
+        _unitOfWorkStub.Setup(x => x.SaveChangesAsync()).Verifiable();
+
+        // Act
+        await _sut.UploadImgAsync(userId, index, img);
+
+        // Assert
+        _unitOfWorkStub.Verify(x => x.Projects.UpdateAsync(It.IsAny<Project>()), Times.Once());
+        _unitOfWorkStub.Verify(x => x.SaveChangesAsync(), Times.Once());   
     }
 
     [Fact]

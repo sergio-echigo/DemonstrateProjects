@@ -31,7 +31,8 @@ public class ProjectRepositoryTests
             Title = "",
             Description = "",
             Index = 0,
-            UserId = Guid.NewGuid()
+            UserId = Guid.NewGuid(),
+            Img = new byte[100]
         };
     }
 

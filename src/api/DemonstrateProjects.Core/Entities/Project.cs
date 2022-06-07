@@ -10,10 +10,11 @@ public class Project
     public Guid UserId { get; init; }
     public int Index { get; init; }
 
-
     [StringLength(50)]
     public string Title { get; init; } = null!;
 
     [StringLength(200)]
     public string Description { get; init; } = null!;
+
+    public byte[] Img { get; init; } = null!;
 }
