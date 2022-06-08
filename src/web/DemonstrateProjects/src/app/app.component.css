@@ -1,0 +1,8 @@
+.app-nav {
+    animation: load 3s;
+}
+
+@keyframes load {
+    0% { position: relative; top: -100%; }
+    100% { position: relative; top: 0px; }
+}

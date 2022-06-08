@@ -1,0 +1,17 @@
+<mat-toolbar class="nav" color="primary">
+    <button [routerLink]="''" mat-raised-button color="basic" class="nav__header">
+        <h1>DemonstrateProjects</h1>
+        <p>Availble on <a href="https://github.com/arakakiv/demonstrateprojects">GitHub</a></p>
+    </button>
+
+    <section class="nav__buttons">
+        <!-- For non-authenticated users -->
+        <button [routerLink]="'signup'" mat-raised-button color="basic">Sign Up</button>
+        <button [routerLink]="'signin'" mat-raised-button color="basic">Sign In</button>
+
+        <!-- For authenticated users -->
+        <button [routerLink]="'projects'" mat-raised-button color="basic">Projects</button>
+        <button [routerLink]="'keys'" mat-raised-button color="basic">Keys</button>
+        <button [routerLink]="'account'" mat-raised-button color="basic">Account</button>
+    </section>
+</mat-toolbar>
