@@ -19,6 +19,9 @@
             <input type="password" matInput formControlName="password">
         </mat-form-field>
     
-        <button mat-raised-button color="basic" style="margin-top: 20px;">Sign Up!</button>
+        <span *ngIf="formValid == false" style="color: purple;">{{ 'Please, review your data and try it again.' }}</span>
+        <span id="signUpRequestErrorMsg" style="color: purple;"></span>
+
+        <button (click)="submitSignUpForm()" mat-raised-button color="basic" style="margin-top: 20px;">Sign Up!</button>
     </form>
 </section>

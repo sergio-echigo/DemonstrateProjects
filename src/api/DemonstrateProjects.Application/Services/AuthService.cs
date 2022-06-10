@@ -27,6 +27,7 @@ public class AuthService : IAuthService
             {
                 new Claim("username", username)
             }),
+            
             Expires = (!isRefresh) ? DateTime.UtcNow.AddHours(2) : DateTime.UtcNow.AddDays(1),
             SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(secretKey), SecurityAlgorithms.HmacSha256Signature),
             Audience = _config.GetSection("JwtConfig:Audience").Value,

@@ -15,6 +15,10 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SignInComponent } from './views/sign-in/sign-in.component';
+import { HttpClientModule } from '@angular/common/http';
+import { ProjectComponent } from './views/project/project.component';
+import { PersonalKeyComponent } from './views/personal-key/personal-key.component';
+import { AccountComponent } from './views/account/account.component';
 
 @NgModule({
   declarations: [
@@ -22,7 +26,10 @@ import { SignInComponent } from './views/sign-in/sign-in.component';
     NavComponent,
     HomeComponent,
     SignUpComponent,
-    SignInComponent
+    SignInComponent,
+    ProjectComponent,
+    PersonalKeyComponent,
+    AccountComponent
   ],
   imports: [
     BrowserModule,
@@ -33,7 +40,8 @@ import { SignInComponent } from './views/sign-in/sign-in.component';
     MatFormFieldModule,
     MatInputModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    HttpClientModule
   ],
   providers: [],
   bootstrap: [AppComponent]

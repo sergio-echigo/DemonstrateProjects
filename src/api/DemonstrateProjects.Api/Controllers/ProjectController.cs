@@ -155,9 +155,8 @@ public class ProjectController : ControllerBase
     private async Task<Guid> GetUserIdAsyncByTokensAsync()
     {
         var access = HttpContext.Request.Cookies.FirstOrDefault(x => x.Key == "d_a").Value;
-        var refresh = HttpContext.Request.Cookies.FirstOrDefault(x => x.Key == "d_r").Value;
 
-        if (string.IsNullOrEmpty(access) || string.IsNullOrEmpty(refresh) || (_authService.GetUsernameInToken(access) != _authService.GetUsernameInToken(refresh)))
+        if (string.IsNullOrEmpty(access) || (_authService.GetUsernameInToken(access) is null))
             return Guid.Empty;
 
         var user = await _userManager.FindByNameAsync(_authService.GetUsernameInToken(access));

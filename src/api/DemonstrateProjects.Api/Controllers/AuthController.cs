@@ -59,8 +59,9 @@ public class AuthController : ControllerBase
         if (existentByName is not null)
         {
             if (_authService.PasswordHashAreEqual(model.Password, existentByName.PasswordHash))
-            {
-                SetAuthCookies(_authService.GenerateToken(existentByName.UserName, false), _authService.GenerateToken(existentByName.UserName, true));
+            {  
+
+                ImplementTokensCookies(_authService.GenerateToken(existentByName.UserName, false), _authService.GenerateToken(existentByName.UserName, true));
                 return Ok();
             }
         }
@@ -69,7 +70,7 @@ public class AuthController : ControllerBase
         {
             if (_authService.PasswordHashAreEqual(model.Password, existentByEmail.PasswordHash))
             {
-                SetAuthCookies(_authService.GenerateToken(existentByEmail.UserName, false), _authService.GenerateToken(existentByEmail.UserName, true));
+                ImplementTokensCookies(_authService.GenerateToken(existentByEmail.UserName, false), _authService.GenerateToken(existentByEmail.UserName, true));               
                 return Ok();
             }
         }
@@ -80,6 +81,7 @@ public class AuthController : ControllerBase
     [HttpPost("refresh")]
     public async Task<IActionResult> RefreshAsync()
     {
+        // If user has not a expired access token, we won't allow its refresh.
         var access = HttpContext.Request.Cookies.FirstOrDefault(x => x.Key == "d_a");
         if (access.Key is null || access.Value is null)
             return BadRequest();
@@ -95,19 +97,15 @@ public class AuthController : ControllerBase
         var newAccess = _authService.GenerateToken(username, false);
         var newRefresh = _authService.GenerateToken(username, true);
 
-        SetAuthCookies(newAccess, newRefresh);
-        
+        ImplementTokensCookies(newAccess, newRefresh);
+
         await Task.CompletedTask;
         return Ok();
     }
 
-    private void SetAuthCookies(string access, string refresh)
+    private void ImplementTokensCookies(string a, string r)
     {
-        HttpContext.Response.Cookies.Delete("d_a");
-        HttpContext.Response.Cookies.Delete("d_r");
-
-        /* "Secure = False" only in development mode! */
-        HttpContext.Response.Cookies.Append("d_a", access, new CookieOptions() { Expires = DateTimeOffset.MinValue });
-        HttpContext.Response.Cookies.Append("d_r", refresh, new CookieOptions() { Expires = DateTimeOffset.MinValue, HttpOnly = true });
+        HttpContext.Response.Cookies.Append("d_a", a, new CookieOptions() { Secure = true, SameSite = SameSiteMode.None });
+        HttpContext.Response.Cookies.Append("d_r", r, new CookieOptions() { Secure = true, SameSite = SameSiteMode.None, HttpOnly = true });
     }
 }

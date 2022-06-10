@@ -8,6 +8,7 @@ using DemonstrateProjects.Application.Services.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -29,18 +30,33 @@ builder.Services.AddScoped<IAuthService, AuthService>();
 
 /* Authentication */
 builder.Services.AddAuthentication(x => {
-    x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-    x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    x.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+    x.DefaultChallengeScheme = CookieAuthenticationDefaults.AuthenticationScheme;
 }).AddJwtBearer(x => {
     x.RequireHttpsMetadata = false; // False only for development mode!
     x.SaveToken = true;
     x.TokenValidationParameters = new()
     {
-        ValidateAudience = false,
-        ValidateIssuer = false,
+        ValidAudience = builder.Configuration.GetSection("JwtConfig:Audience").Value,
+        ValidIssuer = builder.Configuration.GetSection("JwtConfig:Issuer").Value,
+        ValidateAudience = true,
+        ValidateIssuer = true,
         ValidateIssuerSigningKey = true,
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(builder.Configuration.GetSection("JwtConfig:SecretSecureToken").Value))
     };
+    x.Events = new JwtBearerEvents()
+    {
+        OnMessageReceived = async y => {
+            y.HttpContext.Request.Headers.Authorization = "Bearer " + y.Token;
+            await Task.CompletedTask;
+        }
+    };
+});
+
+builder.Services.AddCors(x => {
+    x.AddPolicy("CorsPolicy", y => {
+        y.WithOrigins("http://localhost:4200").AllowAnyHeader().AllowAnyMethod().AllowCredentials();
+    });
 });
 
 builder.Services.AddControllers(opt => opt.SuppressAsyncSuffixInActionNames = false);
@@ -51,6 +67,8 @@ app.UseHttpsRedirection();
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+app.UseCors("CorsPolicy");
 
 app.MapControllers();
 

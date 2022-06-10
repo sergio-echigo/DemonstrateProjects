@@ -28,7 +28,7 @@ public class PersonalReadKeyController : ControllerBase
     [HttpPost("new")]
     public async Task<IActionResult> CreateAsync(NewPersonalReadKeyModel model)
     {
-        var userId = await GetUserIdAsyncByTokensAsync();
+        var userId = await GetUserIdAsyncByTokenAsync();
         if (userId == Guid.Empty)
             return Forbid();
 
@@ -39,7 +39,7 @@ public class PersonalReadKeyController : ControllerBase
     [HttpGet("personal")]
     public async Task<IActionResult> GetAllFromUserAsync()
     {
-        var userId = await GetUserIdAsyncByTokensAsync();
+        var userId = await GetUserIdAsyncByTokenAsync();
         if (userId == Guid.Empty)
             return Forbid();
         
@@ -52,7 +52,7 @@ public class PersonalReadKeyController : ControllerBase
     {
         try
         {
-            var userId = await GetUserIdAsyncByTokensAsync();
+            var userId = await GetUserIdAsyncByTokenAsync();
             if (userId == Guid.Empty)
                 return Forbid();
             
@@ -74,7 +74,7 @@ public class PersonalReadKeyController : ControllerBase
     {
         try
         {
-            var userId = await GetUserIdAsyncByTokensAsync();
+            var userId = await GetUserIdAsyncByTokenAsync();
             if (userId == Guid.Empty)
                 return Forbid();
             
@@ -92,12 +92,10 @@ public class PersonalReadKeyController : ControllerBase
         }
     }
 
-    private async Task<Guid> GetUserIdAsyncByTokensAsync()
+    private async Task<Guid> GetUserIdAsyncByTokenAsync()
     {
         var access = HttpContext.Request.Cookies.FirstOrDefault(x => x.Key == "d_a").Value;
-        var refresh = HttpContext.Request.Cookies.FirstOrDefault(x => x.Key == "d_r").Value;
-
-        if (string.IsNullOrEmpty(access) || string.IsNullOrEmpty(refresh) || (_authService.GetUsernameInToken(access) != _authService.GetUsernameInToken(refresh)))
+        if (string.IsNullOrEmpty(access) || (_authService.GetUsernameInToken(access) is null))
             return Guid.Empty;
 
         var user = await _userManager.FindByNameAsync(_authService.GetUsernameInToken(access));
