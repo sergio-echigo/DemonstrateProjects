@@ -1,0 +1,21 @@
+<section class='projects'>
+    <!-- List of projects -->
+    <section class="project-list">
+        <article (click)="changeMainProject(p.index, $event)" *ngFor="let p of projects" class="project__card">
+            <span class="project__card__index">{{ p.index }}</span>
+            <header class="project__card__header">
+                <h3 style="word-wrap: break-word;" style="font-size: 20px;">{{ p.title }}</h3>
+                <p style="word-wrap: break-word;">{{ p.description | projDescription }}</p>
+            </header>
+
+            <button mat-mini-fab (click)="deleteProject(p.index)" color="primary" style="align-self: flex-end;"><mat-icon>delete_forever</mat-icon></button>
+        </article>
+    </section>
+
+    <!-- Selected project (if any) -->
+    <section>
+        <app-project></app-project>
+    </section>
+</section>
+
+<button mat-fab style="position: fixed; bottom: 10px; right: 10px;" color="primary" (click)="openNewProjectDialog()"><mat-icon>plus_one</mat-icon></button>

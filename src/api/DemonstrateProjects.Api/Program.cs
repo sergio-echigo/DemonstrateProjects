@@ -30,45 +30,44 @@ builder.Services.AddScoped<IAuthService, AuthService>();
 
 /* Authentication */
 builder.Services.AddAuthentication(x => {
-    x.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-    x.DefaultChallengeScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-}).AddJwtBearer(x => {
-    x.RequireHttpsMetadata = false; // False only for development mode!
-    x.SaveToken = true;
-    x.TokenValidationParameters = new()
-    {
-        ValidAudience = builder.Configuration.GetSection("JwtConfig:Audience").Value,
-        ValidIssuer = builder.Configuration.GetSection("JwtConfig:Issuer").Value,
-        ValidateAudience = true,
-        ValidateIssuer = true,
-        ValidateIssuerSigningKey = true,
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(builder.Configuration.GetSection("JwtConfig:SecretSecureToken").Value))
-    };
-    x.Events = new JwtBearerEvents()
-    {
-        OnMessageReceived = async y => {
-            y.HttpContext.Request.Headers.Authorization = "Bearer " + y.Token;
+    x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+}).AddJwtBearer(opt => {
+    opt.Events = new() {
+        OnMessageReceived = async context => {
+            var req = context.HttpContext.Request;
+            var cookies = req.Cookies;
+
+            if (cookies.TryGetValue("d_a", out var daValue))
+                req.Headers.Authorization = "Bearer " + daValue;
+            
             await Task.CompletedTask;
         }
     };
-});
+    opt.ClaimsIssuer = builder.Configuration.GetSection("JwtConfig:Issuer").Value;
+    opt.Audience = builder.Configuration.GetSection("JwtConfig:Audience").Value;
+    opt.TokenValidationParameters = new() {
+        ValidIssuer = builder.Configuration.GetSection("JwtConfig:Issuer").Value,
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(builder.Configuration.GetSection("JwtConfig:SecretSecureToken").Value))
+    };
+}); 
 
 builder.Services.AddCors(x => {
     x.AddPolicy("CorsPolicy", y => {
-        y.WithOrigins("http://localhost:4200").AllowAnyHeader().AllowAnyMethod().AllowCredentials();
+        y.WithOrigins("http://localhost:4200").AllowCredentials().AllowAnyMethod().AllowAnyHeader();
     });
 });
 
 builder.Services.AddControllers(opt => opt.SuppressAsyncSuffixInActionNames = false);
 
 var app = builder.Build();
-
+app.UseRouting();
 app.UseHttpsRedirection();
+
+app.UseCors("CorsPolicy");
 
 app.UseAuthentication();
 app.UseAuthorization();
-
-app.UseCors("CorsPolicy");
 
 app.MapControllers();
 

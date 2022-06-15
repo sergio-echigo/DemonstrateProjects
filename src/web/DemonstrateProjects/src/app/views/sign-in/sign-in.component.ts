@@ -1,6 +1,7 @@
 import { HttpResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
@@ -11,7 +12,8 @@ import { AuthService } from 'src/app/services/auth.service';
 export class SignInComponent implements OnInit {
 
   constructor(private formBuilder : FormBuilder,
-              private authService : AuthService) { }
+              private authService : AuthService,
+              private router : Router) { }
 
   ngOnInit(): void {
     this.formGroup = this.formBuilder.group({
@@ -21,10 +23,9 @@ export class SignInComponent implements OnInit {
   }
 
   signIn() {
-    this.authService.signin(this.formGroup?.value).subscribe({
+    this.authService.signIn(this.formGroup?.value).subscribe({
       next: (x) => {
-        console.log(x);
-        /* Maybe Behavior.Set(IsAuthorized = true) */
+        this.router.navigate(['']);
       },
       error: () => {
         (document.getElementById('signInErrorMsg') as HTMLSpanElement).innerText = "Incorrect username, email or password."

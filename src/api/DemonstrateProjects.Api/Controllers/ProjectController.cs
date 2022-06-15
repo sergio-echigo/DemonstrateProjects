@@ -39,7 +39,20 @@ public class ProjectController : ControllerBase
             
         var created = await _projectService.AddAsync(userId, model);
 
-        return CreatedAtAction(nameof(GetPersonalProjectAsync) + "Async", created);
+        return CreatedAtAction(nameof(CreateNewAsync), model);
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> GetProjects()
+    {
+
+        var userId = await GetUserIdAsyncByTokensAsync();
+        if (userId == Guid.Empty)
+            return Forbid();
+
+
+        var listOf = await _projectService.GetFromUserAsync(userId);
+        return Ok(listOf);
     }
 
     [HttpGet("{index}")]
@@ -70,7 +83,6 @@ public class ProjectController : ControllerBase
         }
 
         var projects = await _projectService.GetFromUserAsync(personalReadKey.UserId);
-
         if (index is null)
             return Ok(projects);
         else
@@ -81,7 +93,7 @@ public class ProjectController : ControllerBase
     }
 
     [HttpPost("{index}/img")]
-    public async Task<IActionResult> UploadImgAsync([FromRoute] int index, IFormFile file)
+    public async Task<IActionResult> UploadImgAsync([FromRoute] int index, [FromForm] IFormFile file)
     {
         var allowedExt = new string[] 
         {
@@ -92,9 +104,12 @@ public class ProjectController : ControllerBase
         {
             if (!file.FileName.EndsWith(allowedExt[a]))
                 b++;
+            else
+                break;
             
-            if (b == allowedExt.Length)
+            if (b == allowedExt.Length) 
                 return BadRequest();
+
         }
 
         var userId = await GetUserIdAsyncByTokensAsync();
@@ -112,6 +127,7 @@ public class ProjectController : ControllerBase
             {
                 byte[] img = memoryStream.ToArray();
                 await _projectService.UploadImgAsync(userId, index, img);
+                Console.WriteLine("uploaded");
             }
             else
             {
@@ -133,7 +149,6 @@ public class ProjectController : ControllerBase
             return NotFound();
         else
             await _projectService.EditAsync(userId, index, model);
-        
         return NoContent();
     }
 
@@ -148,13 +163,12 @@ public class ProjectController : ControllerBase
             return NotFound();
         else
             await _projectService.DeleteAsync(userId, index);
-        
         return NoContent();
     }
 
     private async Task<Guid> GetUserIdAsyncByTokensAsync()
     {
-        var access = HttpContext.Request.Cookies.FirstOrDefault(x => x.Key == "d_a").Value;
+        var access = HttpContext.Request.Headers.Authorization.ToString().Replace("Bearer ", "");
 
         if (string.IsNullOrEmpty(access) || (_authService.GetUsernameInToken(access) is null))
             return Guid.Empty;
@@ -162,7 +176,7 @@ public class ProjectController : ControllerBase
         var user = await _userManager.FindByNameAsync(_authService.GetUsernameInToken(access));
         if (user is null)
             return Guid.Empty;
-        
+
         return user.Id;
     }
 }

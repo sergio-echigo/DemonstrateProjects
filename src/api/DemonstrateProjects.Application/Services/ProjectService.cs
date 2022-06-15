@@ -98,7 +98,8 @@ public class ProjectService : IProjectService
             Index = project.Index,
             UserId = project.UserId,
             Title = model.Title.Trim().Replace(" ", "_"),
-            Description = model.Description.Trim().Replace("  ", " ")
+            Description = model.Description.Trim().Replace("  ", " "),
+            Img = project.Img
         };
 
         await _unitOfWork.Projects.UpdateAsync(updated);

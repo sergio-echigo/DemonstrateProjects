@@ -1,0 +1,17 @@
+<header style="display: flex; justify-content: space-between;" class="dialog-header">
+    <h1>Add Project</h1>
+    <button mat-mini-fab mat-dialog-close color="primary"><mat-icon>close</mat-icon></button>
+</header>
+<form style="display: flex; flex-direction: column; gap: 10px;" *ngIf="formGroup" [formGroup]="formGroup" class="create__project">
+    <mat-form-field class="dialog-input">
+        <mat-label>Title:</mat-label>
+        <input type="text" matInput formControlName="title">
+    </mat-form-field>
+
+    <mat-form-field class="dialog-input">
+        <mat-label>Description:</mat-label>
+        <input type="text" matInput formControlName="description">
+    </mat-form-field>
+
+    <button (click)="this.data? editProject() : createProject()" mat-raised-button color="basic">{{ this.data ? 'Update!' : 'Create!' }}</button>
+</form>

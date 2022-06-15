@@ -10,13 +10,15 @@ export class AuthService {
   constructor(private httpClient : HttpClient) {
   }
 
-  readonly mainRoute : string = "https://localhost:7153";
+  isAuthenticated() : boolean {
+    return (this.getCookie("d_a") != null && this.getCookie("d_a") != "");
+  }
 
-  signup(user : any) : Observable<any> {
+  signUp(user : any) : Observable<any> {
     return this.httpClient.post(this.apiUrl + "/register", user, this.httpOptions);
   }
 
-  signin(user : any) : Observable<any> {
+  signIn(user : any) : Observable<any> {
     return this.httpClient.post(this.apiUrl + "/login", user, this.httpOptions);
   }
 
@@ -28,5 +30,12 @@ export class AuthService {
   private httpOptions = {
     headers: new HttpHeaders({'Content-Type': 'application/json'}),
     withCredentials: true
+  }
+
+  // https://stackoverflow.com/a/25346429/16050768
+  private sescape(s : string) { return s.replace(/([.*+?\^$(){}|\[\]\/\\])/g, '\\$1'); }
+  private getCookie(name : string) : string | null {
+    var match = document.cookie.match(RegExp('(?:^|;\\s*)' + this.sescape(name) + '=([^;]*)'));
+    return match ? match[1] : null;
   }
 }

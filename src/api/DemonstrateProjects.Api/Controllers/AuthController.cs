@@ -23,7 +23,7 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("register")]
-    public async Task<IActionResult> RegisterAsync(RegisterUserModel model)
+    public async Task<IActionResult> RegisterAsync([FromBody] RegisterUserModel model)
     {
         var existentByName = await _userManager.FindByNameAsync(model.Username);
         var existentByEmail = await _userManager.FindByEmailAsync(model.Email);
@@ -47,7 +47,7 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("login")]
-    public async Task<IActionResult> LoginAsync(LoginUserModel model)
+    public async Task<IActionResult> LoginAsync([FromBody] LoginUserModel model)
     {
         var existentByName = await _userManager.FindByNameAsync(model.Main);
         var existentByEmail = await _userManager.FindByEmailAsync(model.Main);
@@ -85,12 +85,19 @@ public class AuthController : ControllerBase
         var access = HttpContext.Request.Cookies.FirstOrDefault(x => x.Key == "d_a");
         if (access.Key is null || access.Value is null)
             return BadRequest();
+        
+        // If user has not a refresh token, we won't allow its refresh too.
+        var refresh = HttpContext.Request.Cookies.FirstOrDefault(x => x.Key == "d_r");
+        if (refresh.Key is null || refresh.Value is null)
+            return BadRequest();
 
+        // Verifying if access is expired.
         var token = new JwtSecurityToken(access.Value);
         if (token.ValidTo > DateTimeOffset.Now)
             return BadRequest();
         
-        var username = _authService.GetUsernameInToken(access.Value);
+        // Getting username in refresh token.
+        var username = _authService.GetUsernameInToken(refresh.Value);
         if (username is null)
             return BadRequest();
 

@@ -6,12 +6,12 @@
 
     <section class="nav__buttons">
         <!-- For non-authenticated users -->
-        <button [routerLink]="'signup'" mat-raised-button color="basic">Sign Up</button>
-        <button [routerLink]="'signin'" mat-raised-button color="basic">Sign In</button>
+        <button *ngIf="!this.isAuthenticated" [routerLink]="'signup'" mat-raised-button color="basic">Sign Up</button>
+        <button *ngIf="!this.isAuthenticated" [routerLink]="'signin'" mat-raised-button color="basic">Sign In</button>
 
         <!-- For authenticated users -->
-        <button [routerLink]="'projects'" mat-raised-button color="basic">Projects</button>
-        <button [routerLink]="'keys'" mat-raised-button color="basic">Keys</button>
-        <button [routerLink]="'account'" mat-raised-button color="basic">Account</button>
+        <button *ngIf="this.isAuthenticated" [routerLink]="'projects'" mat-raised-button color="basic">Projects</button>
+        <button *ngIf="this.isAuthenticated" [routerLink]="'keys'" mat-raised-button color="basic">Keys</button>
+        <button *ngIf="this.isAuthenticated" [routerLink]="'account'" mat-raised-button color="basic">Account</button>
     </section>
 </mat-toolbar>
