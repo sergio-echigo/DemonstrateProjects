@@ -26,6 +26,7 @@ import { ProjectsComponent } from './views/projects/projects.component';
 import { ProjectDialogComponent } from './views/projects/project-dialog/project-dialog.component';
 import { ImgBasePipe } from './pipes/img-base.pipe';
 import { ProjDescriptionPipe } from './pipes/proj-description.pipe';
+import { LocalDateTimePipe } from './pipes/local-date-time.pipe';
 
 @NgModule({
   declarations: [
@@ -40,7 +41,8 @@ import { ProjDescriptionPipe } from './pipes/proj-description.pipe';
     ProjectsComponent,
     ProjectDialogComponent,
     ImgBasePipe,
-    ProjDescriptionPipe
+    ProjDescriptionPipe,
+    LocalDateTimePipe
   ],
   imports: [
     BrowserModule,

@@ -18,7 +18,7 @@ const routes: Routes = [
     { path: ':id', component: ProjectComponent, canActivate: [AuthenticatedGuard] }
   ]},
   { path: 'account', component: AccountComponent, canActivate: [AuthenticatedGuard] },
-  { path: 'personalkeys', component: PersonalKeyComponent, canActivate: [AuthenticatedGuard]}
+  { path: 'keys', component: PersonalKeyComponent, canActivate: [AuthenticatedGuard]}
 ];
 
 @NgModule({

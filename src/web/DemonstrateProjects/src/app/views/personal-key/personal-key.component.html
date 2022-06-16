@@ -1,1 +1,21 @@
-<p>personal-key works!</p>
+<section class="keys">
+    <form class="new-key" *ngIf="formGroup" [formGroup]="formGroup">
+        <h1>Create one!</h1>
+        <mat-form-field>
+            <mat-label>Expiration Date:</mat-label>
+            <input type="date" matInput formControlName="expiresWhen">
+        </mat-form-field>
+    </form>
+
+    <button (click)="new()" mat-stroked-button>Create One!</button>
+
+    <section *ngIf="keys" class="key-list">
+        <article *ngFor="let k of keys" class="key__card">
+            <h2>{{ k.key }}</h2>
+            <section class="key__card__footer">
+                <button mat-mini-fab color="primary" (click)="delete(k.key)"><mat-icon>delete</mat-icon></button>
+                <h3>exp: {{ k.expiresWhen | localDateTime }}</h3>
+            </section>
+        </article>
+    </section>
+</section>

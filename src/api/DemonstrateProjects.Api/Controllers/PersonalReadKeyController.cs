@@ -33,7 +33,7 @@ public class PersonalReadKeyController : ControllerBase
             return Forbid();
 
         var key = await _personalReadKeyService.CreateAsync(userId, model);
-        return CreatedAtAction(nameof(GetAsync) , await _personalReadKeyService.GetAsync(key));
+        return CreatedAtAction(nameof(GetAsync), key);
     }
 
     [HttpGet("personal")]
