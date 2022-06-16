@@ -1,5 +1,5 @@
 <style>
-    #marked-span {
+    .marked-span {
         color: red;
         font-weight: bold;
     }
@@ -8,7 +8,7 @@
 <section class="home-body">
     <header class="home-header">
         <h1 style="font-size: 20px; border: solid 1px black; padding: 10px;">DemonstrateProjects</h1>
-        <p style="font-weight: bold;">For great portfolios, for personal or shared use, for security, for <span id="marked-span">simplicity</span>.</p>
+        <p style="font-weight: bold;">For great portfolios, for personal or shared use, for security, for <span class="marked-span">simplicity</span>.</p>
     </header>
     
     <hr style="color: black; background-color: black; width: 70%;">
@@ -19,19 +19,29 @@
         </header>
         <section class="home-questions__questions">
             <article>
-                <h3 class="question__title">Is it <span id="marked-span">Open Source</span>?</h3>
+                <h3 class="question__title">Is it <span class="marked-span">Open Source</span>?</h3>
                 <p>Yes, and u're allowed to contribute, look at the source code and all that our license allows.</p>
             </article>
 
             <article>
-                <h3 class="question__title">How can I <span id="marked-span">contribute</span>?</h3>
+                <h3 class="question__title">How can I <span class="marked-span">contribute</span>?</h3>
                 <p>Open an Issue in the official repository on github. Don't be shy!</p>
             </article>
-
+            background-image: url('/waybee_web_login/static/src/img/bg-login-waybee.png123');
             <article>
-                <h3 class="question__title">What are <span id="marked-span">keys</span>?</h3>
+                <h3 class="question__title">What are <span class="marked-span">keys</span>?</h3>
                 <p>They are passwords that must be pass on the request body to get all ur projects.</p>
             </article>
+        </section>
+    </section>
+
+    <section class="home-howto">
+        <header>
+            <h2>How to get my projects?</h2>
+        </header>
+        <section class="home-howto__explanation">
+            <p>It's quite <span class="marked-span">simple</span>! Just do a GET request to our API! In the body, pass your key as json (key: value). If you wanna a single project, use, in query, an index parameter (&index=0). See the image below for more info!</p>
+            <img src="" alt="more info">
         </section>
     </section>
     

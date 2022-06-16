@@ -45,7 +45,6 @@ public class ProjectController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> GetProjects()
     {
-
         var userId = await GetUserIdAsyncByTokensAsync();
         if (userId == Guid.Empty)
             return Forbid();
