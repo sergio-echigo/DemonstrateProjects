@@ -78,6 +78,18 @@ public class AuthController : ControllerBase
         return BadRequest();
     }
 
+    [HttpPost("logout")]
+    public async Task<IActionResult> LogoutAsync()
+    {
+        // Delete all cookies!
+        HttpContext.Response.Cookies.Delete("d_a", new CookieOptions() { Secure = true, SameSite = SameSiteMode.None });
+        HttpContext.Response.Cookies.Delete("d_r", new CookieOptions() { Secure = true, SameSite = SameSiteMode.None, HttpOnly = true });
+    
+        await Task.CompletedTask;
+        
+        return NoContent();
+    }
+
     [HttpPost("refresh")]
     public async Task<IActionResult> RefreshAsync()
     {

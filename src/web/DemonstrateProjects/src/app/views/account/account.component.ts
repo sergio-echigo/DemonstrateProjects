@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { AuthenticatedBehaviorSubject } from 'src/app/behaviorSubject/AuthenticatedBehaviorSubject';
 import { Account } from 'src/app/models/account';
 import { AuthService } from 'src/app/services/auth.service';
 
@@ -11,6 +12,7 @@ import { AuthService } from 'src/app/services/auth.service';
 export class AccountComponent implements OnInit {
 
   constructor(private authService : AuthService,
+              private authBehavior: AuthenticatedBehaviorSubject,
               private router : Router) { }
 
   ngOnInit(): void {
@@ -34,6 +36,7 @@ export class AccountComponent implements OnInit {
     this.authService.deleteAccount(pswd).subscribe({
       next: () => {
         alert("Successfully deleted account! Thanks for using our app!");
+        this.authBehavior.isAuthenticated.next(false);
         this.router.navigate(['/']);
       },
       error: () => {

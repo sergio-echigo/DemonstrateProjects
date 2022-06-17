@@ -23,6 +23,10 @@ export class AuthService {
     return this.httpClient.post(this.apiUrl + "/login", user, this.httpOptions);
   }
 
+  logout() : Observable<any> {
+    return this.httpClient.post(this.apiUrl + "/logout", null, { withCredentials: true });
+  }
+
   refresh() : Observable<any> {
     return this.httpClient.post(this.apiUrl + "/refresh", null, this.httpOptions);
   }

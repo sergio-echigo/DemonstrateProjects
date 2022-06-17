@@ -2,6 +2,7 @@ import { HttpResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { AuthenticatedBehaviorSubject } from 'src/app/behaviorSubject/AuthenticatedBehaviorSubject';
 import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
@@ -13,7 +14,8 @@ export class SignInComponent implements OnInit {
 
   constructor(private formBuilder : FormBuilder,
               private authService : AuthService,
-              private router : Router) { }
+              private router : Router,
+              private authBehavior : AuthenticatedBehaviorSubject) { }
 
   ngOnInit(): void {
     this.formGroup = this.formBuilder.group({
@@ -25,6 +27,7 @@ export class SignInComponent implements OnInit {
   signIn() {
     this.authService.signIn(this.formGroup?.value).subscribe({
       next: (x) => {
+        this.authBehavior.isAuthenticated.next(true);
         this.router.navigate(['']);
       },
       error: () => {

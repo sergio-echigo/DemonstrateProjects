@@ -13,5 +13,6 @@
         <button *ngIf="this.isAuthenticated" [routerLink]="'projects'" mat-raised-button color="basic">Projects</button>
         <button *ngIf="this.isAuthenticated" [routerLink]="'keys'" mat-raised-button color="basic">Keys</button>
         <button *ngIf="this.isAuthenticated" [routerLink]="'account'" mat-raised-button color="basic">Account</button>
+        <button *ngIf="this.isAuthenticated" mat-raised-button color="basic" (click)="logout()">Log Out!</button>
     </section>
 </mat-toolbar>
