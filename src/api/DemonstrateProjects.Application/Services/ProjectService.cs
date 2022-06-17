@@ -113,4 +113,10 @@ public class ProjectService : IProjectService
         await _unitOfWork.Projects.DeleteAsync(project!.Id);
         await _unitOfWork.SaveChangesAsync();
     }
+
+    public async Task DeleteAllAsync(Guid userId)
+    {
+        _unitOfWork.Projects.DeleteAllAsync(userId);
+        await _unitOfWork.SaveChangesAsync();
+    }
 }

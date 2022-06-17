@@ -14,4 +14,6 @@ public interface IProjectService
 
     Task EditAsync(Guid userId, int index, EditProjectModel model);
     Task DeleteAsync(Guid userId, int index);
+
+    Task DeleteAllAsync(Guid userId);
 }

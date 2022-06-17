@@ -1,1 +1,10 @@
-<p>account works!</p>
+<section *ngIf="account" class="account">
+    <h1>{{ account.username }}</h1>
+    <h2> {{ account.email }}</h2>
+    <p>
+        Active projects: {{ account.activeProjects }}<br>
+        Active keys: {{ account.activeKeys }}
+    </p>
+
+    <button mat-stroked-button (click)="deleteAccountRequest()">Delete Account!</button>
+</section>

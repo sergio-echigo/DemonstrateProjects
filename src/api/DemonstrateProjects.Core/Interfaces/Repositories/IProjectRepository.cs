@@ -6,4 +6,6 @@ public interface IProjectRepository : IBaseRepository<Guid, Project>
 {
     Task<IQueryable<Project>> GetByUserIdAsync(Guid userId);
     Task<Project?> GetByUserIdAndIndexAsync(Guid userId, int index);
+
+    void DeleteAllAsync(Guid userId);
 }

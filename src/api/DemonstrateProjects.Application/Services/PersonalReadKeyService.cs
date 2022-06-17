@@ -66,4 +66,10 @@ public class PersonalReadKeyService : IPersonalReadKeyService
         await _unitOfWork.PersonalReadKeys.DeleteAsync(key);
         await _unitOfWork.SaveChangesAsync();
     }
+
+    public async Task DeleteAllAsync(Guid userId)
+    {
+        _unitOfWork.Projects.DeleteAllAsync(userId);
+        await _unitOfWork.SaveChangesAsync();
+    }
 }

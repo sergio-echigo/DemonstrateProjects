@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { catchError, Observable } from 'rxjs';
+import { Account } from '../models/account';
 
 @Injectable({
   providedIn: 'root'
@@ -24,6 +25,14 @@ export class AuthService {
 
   refresh() : Observable<any> {
     return this.httpClient.post(this.apiUrl + "/refresh", null, this.httpOptions);
+  }
+
+  getAccount() : Observable<Account> {
+    return this.httpClient.get<Account>("https://localhost:7153/account", { withCredentials: true });
+  }
+
+  deleteAccount(pswd : string) : Observable<any> {
+    return this.httpClient.delete("https://localhost:7153/account?pswd=" + pswd, { withCredentials: true })
   }
 
   private readonly apiUrl : string = "https://localhost:7153/auth"; 
