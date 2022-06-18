@@ -51,7 +51,8 @@ public class PersonalReadKeyService : IPersonalReadKeyService
         return new PersonalReadKeyModel()
         {
             Key = personalKey.Key,
-            ExpiresWhen = personalKey.ExpiresWhen
+            ExpiresWhen = personalKey.ExpiresWhen,
+            UserId = personalKey.UserId
         };
     }
 

@@ -68,27 +68,38 @@ public class ProjectController : ControllerBase
         return Ok(project);
     }
 
-    [HttpGet("key")]
+    
+    [AllowAnonymous]
+    [HttpPost("key")]
     public async Task<IActionResult> GetProjectsByReadKey([FromBody] ReadKeyModel model, [FromQuery] int? index)
     {
-        var personalReadKey = await _personalReadKeyService.GetAsync(Guid.Parse(model.Key));
-        if (personalReadKey is null)
-            return Forbid();
-        
-        if (personalReadKey.ExpiresWhen <= DateTimeOffset.Now)
+        try 
         {
-            await _personalReadKeyService.DeleteAsync(personalReadKey.Key);
-            return BadRequest();
-        }
+            var personalReadKey = await _personalReadKeyService.GetAsync(Guid.Parse(model.Key));
 
-        var projects = await _projectService.GetFromUserAsync(personalReadKey.UserId);
-        if (index is null)
-            return Ok(projects);
-        else
-            if (projects.Any(x => x.Index == index))
-                return Ok(projects.SingleOrDefault(x => x.Index == index));
+            if (personalReadKey is null)
+                return Forbid();
+            
+            if (personalReadKey.ExpiresWhen <= DateTimeOffset.Now)
+            {
+                await _personalReadKeyService.DeleteAsync(personalReadKey.Key);
+                return BadRequest();
+            }
+
+            var projects = await _projectService.GetFromUserAsync(personalReadKey.UserId);
+
+            if (index is null)
+                return Ok(projects);
             else
-                return NotFound();
+                if (projects.Any(x => x.Index == index))
+                    return Ok(projects.SingleOrDefault(x => x.Index == index));
+                else
+                    return NotFound();
+        }
+        catch
+        {
+            return NotFound();
+        }
     }
 
     [HttpPost("{index}/img")]

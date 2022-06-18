@@ -27,10 +27,27 @@ export class NavComponent implements OnInit {
         this.router.navigate(['']);
       },
       error: () => {
-        
+
       }
     })
   }
 
+  changeNavView() {
+    const nav = document.getElementById('main-nav');
+    if (this.isHidden) {
+      nav!.style.position = 'static';
+      //nav!.style.top = '';
+
+      this.isHidden = false;
+
+    } else {
+      nav!.style.position = 'absolute';
+      nav!.style.top = '-100vh';
+
+      this.isHidden = true;
+    }
+  }
+
   isAuthenticated? : boolean;
+  isHidden : boolean = false;
 }

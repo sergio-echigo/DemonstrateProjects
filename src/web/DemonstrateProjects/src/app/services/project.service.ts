@@ -23,6 +23,10 @@ export class ProjectService {
     return this.httpClient.get<Project>(this.apiUrl + "/" + index, this.httpOptions);
   }
 
+  getByKey(key : string) : Observable<Project[]> {
+    return this.httpClient.post<Project[]>(this.apiUrl + "/key", { key: key }, this.httpOptions);
+  }
+
   put(index: Number, updated : Project) : Observable<any> {
     return this.httpClient.put(this.apiUrl + "/" + index + "/edit", updated, this.httpOptions)
   }

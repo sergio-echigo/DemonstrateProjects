@@ -1,18 +1,25 @@
-<mat-toolbar class="nav" color="primary">
-    <button [routerLink]="''" mat-raised-button color="basic" class="nav__header">
-        <h1>DemonstrateProjects</h1>
-        <p>Availble on <a href="https://github.com/arakakiv/demonstrateprojects">GitHub</a></p>
-    </button>
-
-    <section class="nav__buttons">
-        <!-- For non-authenticated users -->
-        <button *ngIf="!this.isAuthenticated" [routerLink]="'signup'" mat-raised-button color="basic">Sign Up</button>
-        <button *ngIf="!this.isAuthenticated" [routerLink]="'signin'" mat-raised-button color="basic">Sign In</button>
-
-        <!-- For authenticated users -->
-        <button *ngIf="this.isAuthenticated" [routerLink]="'projects'" mat-raised-button color="basic">Projects</button>
-        <button *ngIf="this.isAuthenticated" [routerLink]="'keys'" mat-raised-button color="basic">Keys</button>
-        <button *ngIf="this.isAuthenticated" [routerLink]="'account'" mat-raised-button color="basic">Account</button>
-        <button *ngIf="this.isAuthenticated" mat-raised-button color="basic" (click)="logout()">Log Out!</button>
-    </section>
-</mat-toolbar>
+<section style="display: flex; flex-direction:column; gap: 10px;">
+    <mat-toolbar id="main-nav" class="nav" color="primary">
+        <button [routerLink]="''" mat-raised-button color="basic" class="nav__header">
+            <h1>DemonstrateProjects</h1>
+            <p>Availble on <a href="https://github.com/arakakiv/demonstrateprojects">GitHub</a></p>
+        </button>
+    
+        <section class="nav__buttons">
+            <!-- For both -->
+            <button [routerLink]="'view'" mat-raised-button color="basic">Test it!</button>
+    
+            <!-- For non-authenticated users -->
+            <button *ngIf="!this.isAuthenticated" [routerLink]="'signup'" mat-raised-button color="basic">Sign Up</button>
+            <button *ngIf="!this.isAuthenticated" [routerLink]="'signin'" mat-raised-button color="basic">Sign In</button>
+    
+            <!-- For authenticated users -->
+            <button *ngIf="this.isAuthenticated" [routerLink]="'projects'" mat-raised-button color="basic">Projects</button>
+            <button *ngIf="this.isAuthenticated" [routerLink]="'keys'" mat-raised-button color="basic">Keys</button>
+            <button *ngIf="this.isAuthenticated" [routerLink]="'account'" mat-raised-button color="basic">Account</button>
+            <button *ngIf="this.isAuthenticated" mat-raised-button color="basic" (click)="logout()">Log Out!</button>
+        </section>
+    </mat-toolbar>
+    
+    <button mat-mini-fab (click)="changeNavView()" color="primary" style="align-self: center; margin-top: 10px; margin-bottom: 20px;">^</button>
+</section>

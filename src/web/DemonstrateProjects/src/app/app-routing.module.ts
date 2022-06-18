@@ -9,9 +9,11 @@ import { ProjectComponent } from './views/project/project.component';
 import { ProjectsComponent } from './views/projects/projects.component';
 import { SignInComponent } from './views/sign-in/sign-in.component';
 import { SignUpComponent } from './views/sign-up/sign-up.component';
+import { ViewProjectsComponent } from './views/view-projects/view-projects.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
+  { path: 'view', component: ViewProjectsComponent },
   { path: 'signup', component: SignUpComponent, canActivate: [NotAuthenticatedGuard] },
   { path: 'signin', component: SignInComponent, canActivate: [NotAuthenticatedGuard] },
   { path: 'projects', component: ProjectsComponent, canActivate: [AuthenticatedGuard], children: [

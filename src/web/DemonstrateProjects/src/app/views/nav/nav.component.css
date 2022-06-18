@@ -28,7 +28,7 @@
 
 .nav__buttons {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     justify-content: center;
     gap: 5px;
 
@@ -53,7 +53,8 @@
     }
 
     .nav__buttons {
-        width: 40%;
+        flex-direction: row;
+        width: 50%;
     }
 
     .nav__buttons > button {

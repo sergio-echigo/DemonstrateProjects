@@ -1,0 +1,22 @@
+<section class="view">
+    <section class="input-key">
+        <header class="input-key__header">
+            <h1>See some projects! Put your key below and submit!</h1>
+            <p>If you do not have a key, please, test it with this: SOMEKEYHERE</p>
+        </header>
+    
+        <section>
+            <input id="input-key" type="text" style="background-color: white; border: solid 2px black; border-radius: 5px;" />
+            <button (click)="findProjects()" style="border-radius: 10px; border: solid 2px black;">See projects!</button>
+        </section>
+    </section>
+    
+    <section *ngIf="this.projects" class="finded-projects" style="padding: 10px;">
+        <article class="project__card" *ngFor="let p of this.projects">
+            <h1>{{ p.title }}</h1>
+            <h2>{{ p.description }}</h2>
+    
+            <img *ngIf="p.base64Img != 'A=='" [src]="p.base64Img | imgBase" style="width: 98%; border-radius: 10px; border: solid 1px black;"/>
+        </article>
+    </section>
+</section>

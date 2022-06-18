@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { ReadKey } from 'src/app/models/key';
 import { ReadKeyService } from 'src/app/services/read-key.service';
 
@@ -11,7 +12,8 @@ import { ReadKeyService } from 'src/app/services/read-key.service';
 export class PersonalKeyComponent implements OnInit {
 
   constructor(private formBuilder: FormBuilder,
-              private keyService : ReadKeyService) { }
+              private keyService : ReadKeyService,
+              private router : Router) { }
 
   ngOnInit(): void {
     this.formGroup = this.formBuilder.group({
@@ -31,7 +33,8 @@ export class PersonalKeyComponent implements OnInit {
   new() : void {
     this.keyService.create(this.formGroup?.value).subscribe({
       next: () => {
-
+        this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => 
+        this.router.navigate(['keys']))
       },
       error: () => {
 
@@ -44,7 +47,8 @@ export class PersonalKeyComponent implements OnInit {
     if (sure) {
       this.keyService.delete(key).subscribe({
         next: () => {
-
+          this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => 
+          this.router.navigate(['keys']))
         },
         error: () => {
 
