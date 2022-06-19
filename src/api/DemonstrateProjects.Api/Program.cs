@@ -33,28 +33,31 @@ builder.Services.AddAuthentication(x => {
     x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
     x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
 }).AddJwtBearer(opt => {
-    opt.Events = new() {
-        OnMessageReceived = async context => {
-            var req = context.HttpContext.Request;
-            var cookies = req.Cookies;
-
-            if (cookies.TryGetValue("d_a", out var daValue))
-                req.Headers.Authorization = "Bearer " + daValue;
-            
-            await Task.CompletedTask;
-        }
-    };
-    opt.ClaimsIssuer = builder.Configuration.GetSection("JwtConfig:Issuer").Value;
-    opt.Audience = builder.Configuration.GetSection("JwtConfig:Audience").Value;
-    opt.TokenValidationParameters = new() {
+    opt.RequireHttpsMetadata = true;
+    opt.SaveToken = true;
+    opt.TokenValidationParameters = new()
+    {
+        ValidateIssuerSigningKey = true,
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(builder.Configuration.GetSection("JwtConfig:SecretSecureToken").Value)),
         ValidIssuer = builder.Configuration.GetSection("JwtConfig:Issuer").Value,
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(builder.Configuration.GetSection("JwtConfig:SecretSecureToken").Value))
+        ValidAudience = builder.Configuration.GetSection("JwtConfig:Audience").Value
     };
-}); 
+});
 
 builder.Services.AddCors(x => {
-    x.AddPolicy("CorsPolicy", y => {
-        y.WithOrigins("http://localhost:4200").AllowCredentials().AllowAnyMethod().AllowAnyHeader();
+    /* Default policy for our hosted webapp! */
+    x.AddPolicy("WebPolicy", opt => {
+        opt.WithOrigins(builder.Configuration.GetSection("CorsConfig:WebUrl").Value)
+            .AllowAnyHeader()
+                .AllowAnyMethod()
+                    .AllowCredentials();
+    });
+
+    /* Default policy for anyone who wanna get projects using keys! */
+    x.AddPolicy("ApiPolicy", opt => {
+        opt.AllowAnyOrigin().WithMethods("POST", "OPTIONS").WithHeaders("Content-Type");
     });
 });
 
@@ -64,7 +67,7 @@ var app = builder.Build();
 app.UseRouting();
 app.UseHttpsRedirection();
 
-app.UseCors("CorsPolicy");
+app.UseCors("WebPolicy");
 
 app.UseAuthentication();
 app.UseAuthorization();

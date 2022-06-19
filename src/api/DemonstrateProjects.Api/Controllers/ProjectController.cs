@@ -2,6 +2,7 @@ using DemonstrateProjects.Application.InputModels;
 using DemonstrateProjects.Application.Services.Interfaces;
 using DemonstrateProjects.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -70,6 +71,7 @@ public class ProjectController : ControllerBase
 
     
     [AllowAnonymous]
+    [EnableCors("ApiPolicy")]
     [HttpPost("key")]
     public async Task<IActionResult> GetProjectsByReadKey([FromBody] ReadKeyModel model, [FromQuery] int? index)
     {

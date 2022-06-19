@@ -28,6 +28,7 @@ import { ImgBasePipe } from './pipes/img-base.pipe';
 import { ProjDescriptionPipe } from './pipes/proj-description.pipe';
 import { LocalDateTimePipe } from './pipes/local-date-time.pipe';
 import { ViewProjectsComponent } from './views/view-projects/view-projects.component';
+import { httpInterceptorsProviders } from '.';
 
 @NgModule({
   declarations: [
@@ -61,7 +62,7 @@ import { ViewProjectsComponent } from './views/view-projects/view-projects.compo
     MatIconModule,
     MatDialogModule
   ],
-  providers: [],
+  providers: [httpInterceptorsProviders],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
