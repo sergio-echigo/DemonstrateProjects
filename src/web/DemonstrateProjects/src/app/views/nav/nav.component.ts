@@ -27,7 +27,7 @@ export class NavComponent implements OnInit {
         this.router.navigate(['']);
       },
       error: () => {
-
+        alert("Error when trying to logout. Please, try it again.");
       }
     })
   }

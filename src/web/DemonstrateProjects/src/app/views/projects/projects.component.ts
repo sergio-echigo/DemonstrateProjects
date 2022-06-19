@@ -21,8 +21,13 @@ export class ProjectsComponent implements OnInit {
   }
 
   private getAll() : void {
-    this.projectService.getAll().subscribe(x => {
-      this.projects = x;
+    this.projectService.getAll().subscribe({
+      next: (x) => {
+        this.projects = x;
+      },
+      error: () => {
+        alert("Error when trying to load all projects. Please, try again later.")
+      }
     });
   }
 
@@ -63,7 +68,7 @@ export class ProjectsComponent implements OnInit {
         );
         },
         error: () => {
-
+          alert("Error when trying to delete the project. May it is unexistent or unavaible.");
         }
       });
     } else {

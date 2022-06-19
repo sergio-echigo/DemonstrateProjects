@@ -35,6 +35,7 @@ export class ProjectDialogComponent implements OnInit {
         this.router.navigate(['projects']));
       },
       error: () => {
+        alert("Error when trying to create a new project. Verify the title and description and try again later.");
         this.formGroup?.reset();
       }
     });
@@ -50,6 +51,7 @@ export class ProjectDialogComponent implements OnInit {
         this.router.navigate(['projects']));
       },
       error: () => {
+        alert("Error when trying to edit a project. Verify the title and description and try again later.");
         this.formGroup?.reset();
       }
     })

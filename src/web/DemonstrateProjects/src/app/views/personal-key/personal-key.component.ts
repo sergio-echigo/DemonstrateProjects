@@ -25,7 +25,7 @@ export class PersonalKeyComponent implements OnInit {
         this.keys = keys;
       },
       error: () => {
-        // handle error
+        alert("Error when loading all keys. Reloads the page or try again later.")
       }
     })
   }
@@ -37,7 +37,7 @@ export class PersonalKeyComponent implements OnInit {
         this.router.navigate(['keys']))
       },
       error: () => {
-
+        alert("Error when creating new key. Try again later.");
       }
     })
   }
@@ -51,7 +51,7 @@ export class PersonalKeyComponent implements OnInit {
           this.router.navigate(['keys']))
         },
         error: () => {
-
+          alert("Error when trying to delete. Sign in again or try it again.");
         }
       });
     } else {

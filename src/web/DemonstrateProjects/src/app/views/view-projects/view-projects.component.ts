@@ -23,7 +23,7 @@ export class ViewProjectsComponent implements OnInit {
         this.projects = x;
       },
       error: () => {
-        
+        alert("Error: invalid key or service unavaible.");
       }
     })
   }

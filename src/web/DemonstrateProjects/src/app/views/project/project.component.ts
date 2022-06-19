@@ -28,7 +28,7 @@ export class ProjectComponent implements OnInit {
             this.project = x;
           },
           error: () => {
-            
+            alert("Error when trying to load project. Try again later or reload the page.");
           }
         });
       }
@@ -39,7 +39,12 @@ export class ProjectComponent implements OnInit {
     const file = (document.getElementById('projectImgInput') as HTMLInputElement).files![0];
     console.log(file);
     this.projectService.changeImg(file, this.id!).subscribe({
-      
+      next: () => {
+        alert("Successfully saved image!");
+      },
+      error: () => {
+        alert("Error when changing image. Verify the size and the type of the img.")
+      }
     });
   }
 
