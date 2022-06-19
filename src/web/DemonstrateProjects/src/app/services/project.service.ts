@@ -25,11 +25,11 @@ export class ProjectService {
   }
 
   getByKey(key : string) : Observable<Project[]> {
-    return this.httpClient.post<Project[]>(this.apiUrl + "key", { key: key }, withoutBodyHttpOptions);
+    return this.httpClient.post<Project[]>(this.apiUrl + "key", { key: key }, { headers: new HttpHeaders({ 'Content-Type': 'application/json' })});
   }
 
   put(index: Number, updated : Project) : Observable<any> {
-    return this.httpClient.put(this.apiUrl + index + "edit", updated, withBodyHttpOptions)
+    return this.httpClient.put(this.apiUrl + index + "/edit", updated, withBodyHttpOptions)
   }
 
   delete(index: Number) : Observable<any> {
@@ -40,7 +40,7 @@ export class ProjectService {
     let formData : FormData = new FormData();
     formData.append('file', file);
 
-    return this.httpClient.post(this.apiUrl + "/" + index + "/img", formData, withoutBodyHttpOptions);
+    return this.httpClient.post(this.apiUrl + index + "/img", formData, { withCredentials: true });
   }
 
   private readonly apiUrl : string = apiUrl + "projects/"
