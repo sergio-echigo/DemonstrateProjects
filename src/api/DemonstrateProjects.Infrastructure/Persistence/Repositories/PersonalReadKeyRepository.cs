@@ -18,6 +18,9 @@ public class PersonalReadKeyRepository : BaseRepository<Guid, PersonalReadKey>, 
     public async Task<IQueryable<PersonalReadKey>> GetByUserIdAsync(Guid userId) =>
         await Task.FromResult(_dbSet.AsQueryable().Where(x => x.UserId == userId));
 
-    public void DeleteAllAsync(Guid userId) =>
+    public async Task DeleteAllFromUserAsync(Guid userId)
+    {
         _dbSet.RemoveRange(_dbSet.AsQueryable().Where(x => x.UserId == userId));
+        await Task.CompletedTask;
+    }
 }

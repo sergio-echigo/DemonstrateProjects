@@ -11,5 +11,5 @@ public interface IPersonalReadKeyService
     Task<PersonalReadKeyModel?> GetAsync(Guid key);
 
     Task DeleteAsync(Guid key);
-    Task DeleteAllAsync(Guid userId);
+    Task DeleteAllFromUserAsync(Guid userId);
 }

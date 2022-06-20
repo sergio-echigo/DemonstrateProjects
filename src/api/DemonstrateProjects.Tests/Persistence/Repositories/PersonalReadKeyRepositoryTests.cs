@@ -45,7 +45,7 @@ public class PersonalReadKeyRepositoryTests
     }
 
     [Fact]
-    public void DeleteAllAsync_ShouldDeleteAllFromUser_WhenExecuted()
+    public async Task DeleteAllFromUserAsync_ShouldDeleteAllFromUser_WhenExecuted()
     {
         // Arrange
         var userId = Guid.NewGuid();
@@ -59,7 +59,7 @@ public class PersonalReadKeyRepositoryTests
         _setStub.Setup(x => x.RemoveRange(keys[0])).Verifiable();
 
         // Act
-        _sut.DeleteAllAsync(userId);
+        await _sut.DeleteAllFromUserAsync(userId);
 
         // Assert
         _setStub.Verify(x => x.RemoveRange(new List<PersonalReadKey>() { keys[0] }), Times.Once);

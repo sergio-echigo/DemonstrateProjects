@@ -65,8 +65,8 @@ public class AccountController : ControllerBase
         if (!_authService.PasswordHashAreEqual(pswd, apparentlyUser.PasswordHash))
             return Unauthorized();
 
-        await _projectService.DeleteAllAsync(id);
-        await _personalReadKeyService.DeleteAllAsync(id);
+        await _projectService.DeleteAllFromUserAsync(id);
+        await _personalReadKeyService.DeleteAllFromUserAsync(id);
 
         await _userManager.DeleteAsync(apparentlyUser);
 

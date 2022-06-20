@@ -90,7 +90,7 @@ public class ProjectRepositoryTests
     }
 
     [Fact]
-    public async Task DeleteAllAsync_ShouldDeleteAllFromUser_WhenExecuted()
+    public async Task DeleteAllFromUserAsync_ShouldDeleteAllFromUser_WhenExecuted()
     {
         // Arrange
         var userId = Guid.NewGuid();
@@ -104,7 +104,7 @@ public class ProjectRepositoryTests
         _setStub.Setup(x => x.RemoveRange(projs[0])).Verifiable();
 
         // Act
-        _sut.DeleteAllAsync(userId);
+        await _sut.DeleteAllFromUserAsync(userId);
 
         // Assert
         _setStub.Verify(x => x.RemoveRange(new List<Project>() { projs[0] }), Times.Once);

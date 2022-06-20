@@ -114,9 +114,9 @@ public class ProjectService : IProjectService
         await _unitOfWork.SaveChangesAsync();
     }
 
-    public async Task DeleteAllAsync(Guid userId)
+    public async Task DeleteAllFromUserAsync(Guid userId)
     {
-        _unitOfWork.Projects.DeleteAllAsync(userId);
+        await _unitOfWork.Projects.DeleteAllFromUserAsync(userId);
         await _unitOfWork.SaveChangesAsync();
     }
 }

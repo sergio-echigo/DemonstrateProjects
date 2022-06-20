@@ -21,6 +21,9 @@ public class ProjectRepository : BaseRepository<Guid, Project>, IProjectReposito
     public async Task<Project?> GetByUserIdAndIndexAsync(Guid userId, int index) =>
         await Task.FromResult(_dbSet.AsQueryable().SingleOrDefault(x => x.UserId == userId && x.Index == index));
 
-    public void DeleteAllAsync(Guid userId) =>
+    public async Task DeleteAllFromUserAsync(Guid userId)
+    {
         _dbSet.RemoveRange(_dbSet.AsQueryable().Where(x => x.UserId == userId));
+        await Task.CompletedTask;
+    }
 }
