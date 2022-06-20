@@ -1,5 +1,4 @@
 using DemonstrateProjects.Core.Entities;
-using DemonstrateProjects.Core.Interfaces;
 using DemonstrateProjects.Infrastructure.Persistence;
 using DemonstrateProjects.Infrastructure.Persistence.Repositories;
 using Microsoft.EntityFrameworkCore;
@@ -10,156 +9,104 @@ namespace DemonstrateProjects.Tests.Persistence.Repositories;
 
 public class ProjectRepositoryTests
 {
-    private readonly Mock<AppDbContext> _contextStub;
-    private readonly Mock<DbSet<Project>> _dbSetStub;
+    private readonly Mock<AppDbContext> _context;
+    private readonly Mock<DbSet<Project>> _setStub;
 
     private readonly ProjectRepository _sut;
 
-    private readonly Project _mainEntity;
-
     public ProjectRepositoryTests()
     {
-        _contextStub = new(new DbContextOptions<AppDbContext>());
-        _dbSetStub = new();
+        _context = new(new DbContextOptions<AppDbContext>());
+        _setStub = new();
 
-        _contextStub.Setup(x => x.Set<Project>()).Returns(_dbSetStub.Object);
+        _context.Setup(x => x.Set<Project>()).Returns(_setStub.Object);
 
-        _sut = new(_contextStub.Object);
+        _sut = new(_context.Object);
+    }
 
-        _mainEntity = new Project()
+    [Fact]
+    public async Task GetByUserIdAsync_ShouldReturnAllFromUser_WhenExecuted()
+    {
+        // Arrange
+        var userId = Guid.NewGuid();
+        var projs = new List<Project>()
         {
-            Title = "",
-            Description = "",
-            Index = 0,
-            UserId = Guid.NewGuid(),
-            Img = new byte[100]
+            new() { UserId = userId },
+            new() { UserId = Guid.NewGuid() } 
         };
-    }
 
-    [Fact]
-    public async Task Add_ShouldAddToDatabase_WhenExecuted()
-    {
-        // Arrange
-        _dbSetStub.Setup(x => x.Add(_mainEntity)).Verifiable();
+        _setStub.Setup(x => x.AsQueryable()).Returns(projs.AsQueryable());
 
         // Act
-        await _sut.Add(_mainEntity);
+        var result = await _sut.GetByUserIdAsync(userId);
 
         // Assert
-        _dbSetStub.Verify(x => x.Add(_mainEntity), Times.Once);
+        Assert.True(result.All(x => x.UserId == userId));
     }
 
     [Fact]
-    public async Task GetEntitiesAsync_ShouldReturnAllEntities_WhenExecuted()
+    public async Task GetByUserIdAndIndexAsync_ShouldReturnProject_WhenExistentProject()
     {
         // Arrange
-        _dbSetStub.Setup(x => x.AsQueryable()).Returns(new List<Project>() { _mainEntity }.AsQueryable());
+        var userId = Guid.NewGuid();
+        var index = 1;
+
+        var projs = new List<Project>()
+        {
+            new() { UserId = userId, Index = index },
+            new() { UserId = Guid.NewGuid(), Index = index },
+            new() { UserId = userId, Index = 0 } 
+        };
+
+        _setStub.Setup(x => x.AsQueryable()).Returns(projs.AsQueryable());
 
         // Act
-        var result = await _sut.GetEntitiesAsync();
+        var result = await _sut.GetByUserIdAndIndexAsync(userId, index);
 
         // Assert
-        Assert.NotNull(result);
-        Assert.IsAssignableFrom<IQueryable<Project>>(result);
-        Assert.Contains(_mainEntity, result);
+        Assert.True(result == projs[0]);
     }
 
     [Fact]
-
-    public async Task GetByUserIdAsync_ShouldReturnEntitiesFromUser_WhenExecuted()
+    public async Task GetByUserIdAndIndexAsync_ShouldReturnNull_WhenInexistentProject()
     {
         // Arrange
-        _dbSetStub.Setup(x => x.AsQueryable()).Returns(new List<Project>() { _mainEntity }.AsQueryable());
+        var userId = Guid.NewGuid();
+        var index = 1;
+
+        var projs = new List<Project>()
+        {
+            new() { UserId = Guid.NewGuid(), Index = index },
+            new() { UserId = userId, Index = 0 } 
+        };
+
+        _setStub.Setup(x => x.AsQueryable()).Returns(projs.AsQueryable());
 
         // Act
-        var result = await _sut.GetByUserIdAsync(_mainEntity.UserId);
-
-        // Assert
-        Assert.NotNull(result);
-        Assert.IsAssignableFrom<IQueryable<Project>>(result);
-        Assert.Contains(_mainEntity, result);
-    }
-
-    [Fact]
-    public async Task GetByUserIdAndIndex_ShouldReturnEntity_WhenEntityFound()
-    {
-        // Arrange
-        _dbSetStub.Setup(x => x.AsQueryable()).Returns(new List<Project>() { _mainEntity }.AsQueryable());
-
-        // Act
-        var result = await _sut.GetByUserIdAndIndexAsync(_mainEntity.UserId, _mainEntity.Index);
-
-        // Assert
-        Assert.NotNull(result);
-        Assert.IsType<Project>(result);
-        Assert.Equal(_mainEntity, result);
-    }
-
-    [Fact]
-    public async Task GetByUserIdAndIndex_ShouldReturnNull_WhenEntityNotFound()
-    {
-        // Arrange
-        _dbSetStub.Setup(x => x.AsQueryable()).Returns(new List<Project>().AsQueryable());
-
-        // Act
-        var result = await _sut.GetByUserIdAndIndexAsync(_mainEntity.UserId, _mainEntity.Index);
+        var result = await _sut.GetByUserIdAndIndexAsync(userId, index);
 
         // Assert
         Assert.Null(result);
     }
 
     [Fact]
-    public async Task GetEntityAsync_ShouldReturnEntity_WhenEntityFoundByKey()
+    public async Task DeleteAllAsync_ShouldDeleteAllFromUser_WhenExecuted()
     {
         // Arrange
-        _dbSetStub.Setup(x => x.FindAsync(_mainEntity.Id)).ReturnsAsync(_mainEntity);
+        var userId = Guid.NewGuid();
+        var projs = new List<Project>()
+        {
+            new() { UserId = userId },
+            new() { UserId = Guid.NewGuid() } 
+        };
+
+        _setStub.Setup(x => x.AsQueryable()).Returns(projs.AsQueryable());
+        _setStub.Setup(x => x.RemoveRange(projs[0])).Verifiable();
 
         // Act
-        var result = await _sut.GetEntityAsync(_mainEntity.Id);
+        _sut.DeleteAllAsync(userId);
 
         // Assert
-        Assert.NotNull(result);
-        Assert.Equal(_mainEntity, result);
-    }
-
-    [Fact]
-    public async Task GetEntityAsync_ShouldReturnNull_WhenEntityNotFoundByKey()
-    {
-        // Arrange
-        _dbSetStub.Setup(x => x.FindAsync(_mainEntity.Id)).ReturnsAsync((Project?)null);
-
-        // Act
-        var result = await _sut.GetEntityAsync(_mainEntity.Id);
-
-        // Assert
-        Assert.Null(result);
-    }
-
-    [Fact]
-    public async Task UpdateAsync_ShouldUpdate_WhenExecuted()
-    {
-        // Arrange
-        _dbSetStub.Setup(x => x.FindAsync(_mainEntity.Id)).ReturnsAsync(_mainEntity);
-        _dbSetStub.Setup(x => x.Update(_mainEntity)).Verifiable();
-
-        // Act
-        await _sut.UpdateAsync(_mainEntity);
-
-        // Assert
-        _dbSetStub.Verify(x => x.Update(_mainEntity), Times.Once);
-    }
-
-    [Fact]
-    public async Task DeleteAsync_ShouldDelete_WhenExecuted()
-    {
-        // Arrange
-        _dbSetStub.Setup(x => x.FindAsync(_mainEntity.Id)).ReturnsAsync(_mainEntity);
-        _dbSetStub.Setup(x => x.Remove(_mainEntity)).Verifiable();
-
-        // Act
-        await _sut.DeleteAsync(_mainEntity.Id);
-
-        // Assert
-        _dbSetStub.Verify(x => x.Remove(_mainEntity), Times.Once);
+        _setStub.Verify(x => x.RemoveRange(new List<Project>() { projs[0] }), Times.Once);
     }
 }
