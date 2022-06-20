@@ -70,7 +70,7 @@ public class PersonalReadKeyService : IPersonalReadKeyService
 
     public async Task DeleteAllFromUserAsync(Guid userId)
     {
-        await _unitOfWork.Projects.DeleteAllFromUserAsync(userId);
+        await _unitOfWork.PersonalReadKeys.DeleteAllFromUserAsync(userId);
         await _unitOfWork.SaveChangesAsync();
     }
 }

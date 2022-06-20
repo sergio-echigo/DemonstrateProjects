@@ -113,4 +113,21 @@ public class PersonalReadKeyServiceTests
         _unitOfWorkStub.Verify(x => x.PersonalReadKeys.DeleteAsync(key), Times.Once());
         _unitOfWorkStub.Verify(x => x.SaveChangesAsync(), Times.Once);
     }
+
+    [Fact]
+    public async Task DeleteAllFromUserAsync_ShouldDeleteAll_WhenExecuted()
+    {
+        // Arrange
+        var userId = Guid.NewGuid();
+        
+        _unitOfWorkStub.Setup(x => x.PersonalReadKeys.DeleteAllFromUserAsync(userId)).Verifiable();
+        _unitOfWorkStub.Setup(x => x.SaveChangesAsync()).Verifiable();
+
+        // Act
+        await _sut.DeleteAllFromUserAsync(userId);
+
+        // Assert
+        _unitOfWorkStub.Verify(x => x.PersonalReadKeys.DeleteAllFromUserAsync(userId), Times.Once);
+        _unitOfWorkStub.Verify(x => x.SaveChangesAsync(), Times.Once);
+    }
 }

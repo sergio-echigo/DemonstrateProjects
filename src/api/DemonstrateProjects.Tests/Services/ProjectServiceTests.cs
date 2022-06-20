@@ -179,4 +179,21 @@ public class ProjectServiceTests
         _unitOfWorkStub.Setup(x => x.Projects.DeleteAsync(_mainEntity.Id)).Verifiable();
         _unitOfWorkStub.Setup(x => x.SaveChangesAsync()).Verifiable();
     }
+
+    [Fact]
+    public async Task DeleteAllFromUserAsync_ShouldDeleteAll_WhenExecuted()
+    {
+        // Arrange
+        var userId = Guid.NewGuid();
+        
+        _unitOfWorkStub.Setup(x => x.Projects.DeleteAllFromUserAsync(userId)).Verifiable();
+        _unitOfWorkStub.Setup(x => x.SaveChangesAsync()).Verifiable();
+
+        // Act
+        await _sut.DeleteAllFromUserAsync(userId);
+
+        // Assert
+        _unitOfWorkStub.Verify(x => x.Projects.DeleteAllFromUserAsync(userId), Times.Once);
+        _unitOfWorkStub.Verify(x => x.SaveChangesAsync(), Times.Once);
+    }
 }
