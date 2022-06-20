@@ -1,18 +1,39 @@
-.project-view {
-    padding-top: 20px;
+* {
+    margin: 0px;
+    padding: 0px;
+    box-sizing: border-box;
+}
+
+.project {
+    display:  flex;
+    flex-direction: column;
+    align-items: center;
+
+    padding-bottom: 20px;
+
     text-align: center;
 }
 
-.dialog-header {
+.project-view__buttons {
     display: flex;
-    justify-content: space-between;
+    flex-direction: column;
+    align-items: center;
+    gap:  5px;
+    margin-top: 5vh;
 
-    width: 100%;
+    width:  100%;
 }
 
-.create__project {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+.project-view__buttons__change-img {
+    display:  flex;
     flex-direction: column;
+    align-items: center;
+
+    width:  100%;
+}
+
+@media only screen and (max-width:  768px) {
+    .project {
+        padding-top:  20px;
+    }
 }

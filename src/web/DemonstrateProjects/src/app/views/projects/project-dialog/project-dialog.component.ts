@@ -6,7 +6,7 @@ import { Project } from 'src/app/models/project';
 import { ProjectService } from 'src/app/services/project.service';
 
 @Component({
-  selector: 'app-project-dialog',
+  selector: 'app-project-dialog', 
   templateUrl: './project-dialog.component.html',
   styleUrls: ['./project-dialog.component.css']
 })

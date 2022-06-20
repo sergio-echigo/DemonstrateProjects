@@ -1,10 +1,10 @@
-<section class='projects'>
-    <!-- List of projects -->
-    <section class="project-list">
-        <article (click)="changeMainProject(p.index, $event)" *ngFor="let p of projects" class="project__card">
-            <span class="project__card__index">{{ p.index }}</span>
+<main class='projects'>
+    <!-- List of Projects -->
+    <section class='project-list' style="overflow-y: scroll;">
+        <article style="overflow-y: scroll;" (click)="changeMainProject(p.index, $event)" *ngFor="let p of projects" class="project__card">
+            <span class="project__card__index" style="font-size: 2em;">{{ p.index }}</span>
             <header class="project__card__header">
-                <h3 style="word-wrap: break-word;" style="font-size: 20px;">{{ p.title }}</h3>
+                <h2 style="word-wrap: break-word;" style="font-size: 1.5em;">{{ p.title }}</h2>
                 <p style="word-wrap: break-word;">{{ p.description | projDescription }}</p>
             </header>
 
@@ -13,9 +13,9 @@
     </section>
 
     <!-- Selected project (if any) -->
-    <section>
+    <section style='overflow-y: scroll;' class='selected-project'>
         <app-project></app-project>
     </section>
-</section>
 
-<button mat-fab style="position: fixed; bottom: 10px; right: 10px;" color="primary" (click)="openNewProjectDialog()"><mat-icon>plus_one</mat-icon></button>
+    <button mat-fab style="position: fixed; bottom: 10px; right: 10px;" color="primary" (click)="openNewProjectDialog()"><mat-icon>plus_one</mat-icon></button>
+</main>

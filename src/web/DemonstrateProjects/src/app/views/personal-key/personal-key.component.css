@@ -1,31 +1,66 @@
-.input-key {
+::-webkit-scrollbar {
+    width: 5px;
+}
+
+::-webkit-scrollbar-track {
+    background: white;
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgb(80, 7, 198);
+    border-radius: 15px;
+}
+  
+::-webkit-scrollbar-thumb:hover {
+    background: rgb(80, 7, 198);
+}
+
+.keys {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-    gap: 15px;
 
-    padding: 20px;
+    width:  100%;
+    height:  75vh;
 
     text-align: center;
 }
 
+.key-list {
+    width:  80%;
+    margin-top: 20px;
+    
+    overflow-y: scroll;
+}
+
 .key__card {
-    display: flex;
+    display:  flex;
     flex-direction: column;
+    gap:  5px;
 
-    justify-content: space-between;
-    margin-top: 25px;
+    padding:  30px 10px 10px 30px;  
 
-    padding: 20px;
+    margin-bottom: 2px;
 
-    box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
+    border:  solid 1px black;
 }
 
 .key__card__footer {
-    display: flex;
+    display:  flex;
     justify-content: space-between;
-    align-items: flex-end;  
+}
 
-    padding: 10px;
+.hr-divider {
+    width: 80%;
+    margin-top:  35px;
+}
+
+@media only screen and (min-width:  1000px) {
+    .key-list {
+        width:  40%;
+    }
+
+    .hr-divider {
+        width:  40%;
+    }
 }

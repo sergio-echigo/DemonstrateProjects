@@ -1,19 +1,23 @@
-<section>
-    <section class="project-view" *ngIf="project">
-        <h1>{{ project.title }}</h1>
-        <h2 style="word-wrap: break-word;">{{ project.description }}</h2>
-        
-        <img *ngIf="project.base64Img != 'A=='" [src]="project.base64Img | imgBase" style="width: 98%; border-radius: 10px; border: solid 1px black;"/>
+<main class='project'>
+    <section class='project-view' *ngIf='project'>
+        <header>
+            <h1>{{ project.title }}</h1>
+            <h2 style='word-wrap: break-word;'>{{ project.description }}</h2>
+        </header>
 
-        <section style="display: flex; flex-direction: column; gap: 5px; padding: 5px;">
+        <img *ngIf='project.base64Img != "AA=="' [src]='project.base64Img | imgBase' style='width: 98%; border-radius: 10px; border: solid 1px black;'>
+
+        <section class='project-view__buttons'>
             <label>PNG, JPG and GIF only. Max size: 10 mb.</label>
             
-            <input style="margin-top: 10px;" type="file" id="projectImgInput" />
-            <button style="width: 50%;" mat-raised-button (click)="changeProjectImg()">Change cover!</button>
+            <section class='project-view__buttons__change-img'>
+                <input style="margin-top: 10px;" type="file" id="projectImgInput" />
+                <button style="width: 50%;" mat-raised-button (click)="changeProjectImg()">Change cover!</button>
+            </section>
 
             <button style="width: 50%;" mat-raised-button (click)="openEditProjectDialog()">Edit Project!</button>
         </section>
     </section>
 
-    <span *ngIf="!project">There's no selected project.</span>
-</section>
+    <span *ngIf='!project'>There's no project or no selected project</span>
+</main>

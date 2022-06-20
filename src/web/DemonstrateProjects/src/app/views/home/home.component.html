@@ -1,53 +1,54 @@
-<style>
-    .marked-span {
-        color: red;
-        font-weight: bold;
-    }
-</style>
+<main class='home'>
+	<header class='home__header'>
+		<h1 style='font-size: 1.4em;'>DemonstrateProjects</h1>
+		<h2 style='font-size: 1.7em;'>For great portfolios, for personal or shared use, for security, for <span class='highlight-red-text'>simplicity</span>.</h2>
+	</header>
 
-<section class="home-body">
-    <header class="home-header">
-        <h1 style="font-size: 20px; border: solid 1px black; padding: 10px;">DemonstrateProjects</h1>
-        <p style="font-weight: bold;">For great portfolios, for personal or shared use, for security, for <span class="marked-span">simplicity</span>.</p>
-    </header>
-    
-    <hr style="color: black; background-color: black; width: 70%;">
-    
-    <section class="home-questions">
-        <header>
-            <h2>Frequently Asked Questions</h2>
-        </header>
-        <section class="home-questions__questions">
-            <article>
-                <h3 class="question__title">Is it <span class="marked-span">Open Source</span>?</h3>
-                <p>Yes, and u're allowed to contribute, look at the source code and all that our license allows.</p>
+	<hr style="width: 90%;">
+
+	<section class='home__faq'>
+		<header class='home__faq__header'>
+			<h3 class="header--title">Frequently Asked Questions (FAQ)</h3>
+		</header>
+
+        <section class="faq__q">
+            <article class='faq__q__card'>
+                <h4 class="header--title">Is it <span class='highlight-red-text'>Open Source?</span></h4>
+                <p>
+                    Yes, and you're allowed to contribute! Look at our repository and all that our license allows.
+                </p>
             </article>
-
-            <article>
-                <h3 class="question__title">How can I <span class="marked-span">contribute</span>?</h3>
-                <p>Open an Issue in the official repository on github. Don't be shy!</p>
+    
+            <article class='faq__q__card'>
+                <h4 class="header--title">How can I <span class='highlight-red-text'>contribute?</span></h4>
+                <p>
+                    Open an Issue in the official repository on github. Don't be shy!
+                </p>
             </article>
-
-            <article>
-                <h3 class="question__title">What are <span class="marked-span">keys</span>?</h3>
-                <p>They are passwords that must be pass on the request body to get all ur projects.</p>
+    
+            <article class='faq__q__card'>
+                <h4 class="header--title">What are <span class='highlight-red-text'>keys?</span></h4>
+                <p>
+                    They are access tokens that must be passed on the request body to you and other people get all your projects.
+                </p>
             </article>
         </section>
-    </section>
+	</section>
 
-    <section class="home-howto" style="margin-top: 15px;">
+	<section class='home__getting-projects'>
         <header>
-            <h2>How to get my projects?</h2>
+            <h3 class="header--title">How to get/allow other people to get my projects?</h3>
+            <p style="text-align: justify;">
+                It's quite <span class='highlight-red-text'>simple!</span> Just do a <code class="inline-code">POST</code> request to our API! In the body, you must pass your key. If you wanna other people to access your projects, you&apos;ll need to share your key. In the headers, you must set <code class="inline-code">Content-Type</code> header to <code class="inline-code">application/json</code>. If you wanna a single project, use as query parameter the <code class="inline-code">index</code> parameter. If no project exists or your key is invalid you&apos;ll get an error! See the code below for more information!
+            </p> 
         </header>
-        <section class="home-howto__explanation">
-            <p>It's quite <span class="marked-span">simple</span>! Just do a GET request to our API! In the body, pass your key as json (key: value). If you wanna a single project, use, in query, an index parameter (&index=0). See the image below for more info!</p>
-            <img src="" alt="more info">
+
+        <section class="getting-projects__samples">
+            <pre style="text-align: justify; background-color: rgb(80, 80, 80); overflow-x: scroll; color: whitesmoke; padding: 0px 20px 0px 20px;">
+                <code style="width: 95%; font-size: 1em; overflow-x: scroll;">
+                    {{ sampleCodeRequest }}
+                </code>
+            </pre>
         </section>
-    </section>
-    
-    <hr>
-    
-    <footer class="home-footer">
-        <p>Made with &lt;3 by <a href="https://github.com/arakakiv">arakakiv</a></p>
-    </footer>
-</section>
+	</section>
+</main>

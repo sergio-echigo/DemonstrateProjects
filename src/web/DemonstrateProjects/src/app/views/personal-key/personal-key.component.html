@@ -1,5 +1,5 @@
-<section class="keys">
-    <form class="new-key" *ngIf="formGroup" [formGroup]="formGroup">
+<main class='keys'>
+    <form class='keys__new-key-form' *ngIf='formGroup' [formGroup]='formGroup'>
         <h1>Create one!</h1>
         <mat-form-field>
             <mat-label>Expiration Date:</mat-label>
@@ -7,7 +7,9 @@
         </mat-form-field>
     </form>
 
-    <button (click)="new()" mat-stroked-button>Create One!</button>
+    <button (click)='new()' mat-stroked-button>Create!</button>
+
+    <hr class='hr-divider'/>
 
     <section *ngIf="keys" class="key-list">
         <article *ngFor="let k of keys" class="key__card">
@@ -18,4 +20,4 @@
             </section>
         </article>
     </section>
-</section>
+</main>
