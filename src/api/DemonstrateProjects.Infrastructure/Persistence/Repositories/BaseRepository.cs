@@ -22,7 +22,7 @@ public class BaseRepository<TKey, TEntity> : IBaseRepository<TKey, TEntity> wher
 
     public async Task<IQueryable<TEntity>> GetEntitiesAsync()
     {
-        return await Task.FromResult(_dbSet.AsNoTracking().AsQueryable());
+        return await Task.FromResult(_dbSet.AsQueryable());
     }
 
     public async Task<TEntity?> GetEntityAsync(TKey key)
@@ -32,6 +32,8 @@ public class BaseRepository<TKey, TEntity> : IBaseRepository<TKey, TEntity> wher
 
     public async Task UpdateAsync(TEntity updatedEntity)
     {
+        _context.ChangeTracker.Clear();
+
         _dbSet.Update(updatedEntity);
         await Task.CompletedTask;
     }

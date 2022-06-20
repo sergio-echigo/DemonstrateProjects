@@ -16,10 +16,10 @@ public class ProjectRepository : BaseRepository<Guid, Project>, IProjectReposito
     }
 
     public async Task<IQueryable<Project>> GetByUserIdAsync(Guid userId) =>
-        await Task.FromResult(_dbSet.AsNoTracking().AsQueryable().Where(x => x.UserId == userId));
+        await Task.FromResult(_dbSet.AsQueryable().Where(x => x.UserId == userId));
     
     public async Task<Project?> GetByUserIdAndIndexAsync(Guid userId, int index) =>
-        await Task.FromResult(_dbSet.AsNoTracking().AsQueryable().SingleOrDefault(x => x.UserId == userId && x.Index == index));
+        await Task.FromResult(_dbSet.AsQueryable().SingleOrDefault(x => x.UserId == userId && x.Index == index));
 
     public void DeleteAllAsync(Guid userId) =>
         _dbSet.RemoveRange(_dbSet.Where(x => x.UserId == userId));
