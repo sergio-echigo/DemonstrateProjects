@@ -1,3 +1,5 @@
+> "Crie seus projetos. Coloque-os aqui. Crie chaves de autorização e as compartilhe. Mostre seus projetos de um jeito simples."
+
 # DemonstrateProjects
 Project made in order to demonstrate your own projects in a simple way. The backend is in C#, and the frontend is an angular app. Some concepts:
  - xUnit for Unit tests.
